@@ -1,0 +1,130 @@
+<mxfile host="app.diagrams.net" modified="2023-08-29T14:56:03.121Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/116.0.0.0 Safari/537.36 Edg/116.0.1938.62" etag="yb5ZekGXguHaEp2g5lBU" version="21.6.9" type="device">
+  <diagram name="Page-1" id="vMF9wIRZA3fUssZkWnM3">
+    <mxGraphModel dx="1382" dy="1885" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-1" value="Car" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="-270" width="360" height="330" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-2" value="&lt;b&gt;Properties:&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-1">
+          <mxGeometry x="-5" y="30" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-7" value="&lt;ul&gt;&lt;li style=&quot;text-align: left;&quot;&gt;String VIN -&lt;font color=&quot;#ff3333&quot;&gt;&amp;nbsp;The VIN of the car to connect to&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;Array Color - &lt;font color=&quot;#ff3333&quot;&gt;RGB color of the car&lt;/font&gt;&amp;nbsp;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;Struct CarState - &lt;font color=&quot;#ff3333&quot;&gt;State fetched from car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;ConnectionManager Connection - &lt;font color=&quot;#ff0000&quot;&gt;Connection Link to car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;Int lastSyncTime - &lt;font color=&quot;#ff3333&quot;&gt;Time (secs) since last synced with car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;Boolean isCarAuth - &lt;font color=&quot;#ff3333&quot;&gt;Used to auth pairing with new car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;String carPic - &lt;font color=&quot;#ff3333&quot;&gt;Photo of user&#39;s car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;IUserAccount Reference - &lt;font color=&quot;#ff3333&quot;&gt;Reference to user account&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-1">
+          <mxGeometry x="-30" y="40" width="370" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-8" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="Fe0PGXJzbjRVoJ1PWfsH-1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="3" y="179" as="sourcePoint" />
+            <mxPoint x="355" y="179" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-14" value="&lt;b&gt;Methods:&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-1">
+          <mxGeometry x="-4" y="179" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-15" value="&lt;ul&gt;&lt;li&gt;refreshState() - &lt;font color=&quot;#ff3333&quot;&gt;Read state from car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;sendCommand(String Command) - &lt;font color=&quot;#ff3333&quot;&gt;Send command to car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;updateVIN(String VIN) - &lt;font color=&quot;#ff3333&quot;&gt;Update VIN for car (reset auth)&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;updateColor() - &lt;font color=&quot;#ff3333&quot;&gt;use carPic to generate new color&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;updatePicture() - &lt;font color=&quot;#ff3333&quot;&gt;prompt user for new picture&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;authenticateCar() - &lt;font color=&quot;#ff3333&quot;&gt;process to authenticate car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;getState() - &lt;font color=&quot;#ff3333&quot;&gt;Returns this.CarState&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-1">
+          <mxGeometry x="-10" y="190" width="370" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-16" value="Connection Manager" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="590" y="-270" width="480" height="290" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-17" value="&lt;b&gt;Properties:&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-16">
+          <mxGeometry x="-5" y="30" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-18" value="&lt;ul&gt;&lt;li style=&quot;text-align: left;&quot;&gt;List IConnetion -&lt;font color=&quot;#ff3333&quot;&gt;&amp;nbsp;List that holds all connection mediums to car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;Boolean - isConnected - &lt;font color=&quot;#ff3333&quot;&gt;status if there&#39;s a connection to car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;IConnection PreferredConnection -&lt;font color=&quot;#ff3333&quot;&gt;&amp;nbsp;Preferred&amp;nbsp;Connection&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-16">
+          <mxGeometry x="-20" y="40" width="390" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-19" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="Fe0PGXJzbjRVoJ1PWfsH-16">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="3" y="122" as="sourcePoint" />
+            <mxPoint x="480" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-20" value="&lt;b&gt;Methods:&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-16">
+          <mxGeometry y="130" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-21" value="&lt;ul&gt;&lt;li&gt;sendToCar(String Payload) - &lt;font color=&quot;#ff3333&quot;&gt;Payload to send to car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;receiveFromCar() - &lt;font color=&quot;#ff3333&quot;&gt;Read state from car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;isConnected() - &lt;font color=&quot;#ff3333&quot;&gt;Returns if there&#39;s a connection to the car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;isConnected(IConnection) - &lt;font color=&quot;#ff3333&quot;&gt;Returns if there&#39;s a connection via the specified medium&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;startConnection() - &lt;font color=&quot;#ff3333&quot;&gt;Opens Connection. Connection Manager chooses medium&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;startConnection(IConnection) - &lt;font color=&quot;#ff3333&quot;&gt;Opens connection to car via IConnection&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;endConnection(IConnection) - &lt;font color=&quot;#ff3333&quot;&gt;Ends connection to car via IConnection&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;endAllConnections() - &lt;font color=&quot;#ff3333&quot;&gt;Ends all connections to the car&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-16">
+          <mxGeometry x="-15" y="140" width="510" height="150" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-23" value="«interface»&lt;br&gt;&lt;b&gt;IConnection&lt;/b&gt;" style="html=1;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="730" y="90" width="180" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-24" value="" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="730" y="130" width="180" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-25" value="&lt;b&gt;Methods:&lt;/b&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="740" y="140" width="60" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-26" value="&lt;ul&gt;&lt;li&gt;startConnection()&lt;/li&gt;&lt;li&gt;endConnection()&lt;/li&gt;&lt;li&gt;sendToCar()&lt;/li&gt;&lt;li&gt;recieveFromCar()&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="730" y="160" width="150" height="70" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-33" value="Dashboard" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="30" y="-695" width="495" height="315" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-34" value="&lt;b&gt;Properties:&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-33">
+          <mxGeometry x="-5" y="30" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-35" value="&lt;ul&gt;&lt;li style=&quot;text-align: left;&quot;&gt;List Cars -&lt;font color=&quot;#ff3333&quot;&gt;&amp;nbsp;List that holds all the cars a user owns&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;String - currentLocation - &lt;font color=&quot;#ff3333&quot;&gt;Location reported by user&#39;s phone&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;Car activeCar -&lt;font color=&quot;#ff3333&quot;&gt;&amp;nbsp;The current Car the user is controlling from car list&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;List subMenuCategories - &lt;font color=&quot;#ff3333&quot;&gt;The list of submenus to be rendered to the homepage&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;UserAccount Reference - &lt;font color=&quot;#ff3333&quot;&gt;Holds reference to User Account Object&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;ConnectionManager Reference &lt;font color=&quot;#ff0000&quot;&gt;- Holds reference to ConnectionManager&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-33">
+          <mxGeometry x="-20" y="35" width="490" height="120" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-36" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="Fe0PGXJzbjRVoJ1PWfsH-33">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="2" y="145" as="sourcePoint" />
+            <mxPoint x="488" y="145" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-37" value="&lt;b&gt;Methods:&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-33">
+          <mxGeometry y="155" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-38" value="&lt;ul&gt;&lt;li&gt;addNewCar() - &lt;font color=&quot;#ff3333&quot;&gt;Creates a new car Object and adds the new car to the list of cars.&amp;nbsp;&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;&lt;span style=&quot;color: rgb(255, 51, 51); background-color: initial;&quot;&gt;&amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; &amp;nbsp; Once car is authenticated, adds the new car to users profile on firebase&lt;/span&gt;&lt;br&gt;&lt;ul&gt;&lt;li style=&quot;&quot;&gt;switchActiveCar() - &lt;font color=&quot;#ff3333&quot;&gt;Switch the current active car&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;removeCar() - &lt;font color=&quot;#ff3333&quot;&gt;Removes car from user profile&lt;/font&gt;&lt;/li&gt;&lt;li style=&quot;&quot;&gt;setUpConnections() - &lt;font color=&quot;#ff3333&quot;&gt;Creates ConnectionManager as well as all the connections&lt;/font&gt;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-33">
+          <mxGeometry y="175" width="500" height="130" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-39" value="User Account" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="-695" width="495" height="315" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-40" value="&lt;b&gt;Properties:&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-39">
+          <mxGeometry x="-5" y="30" width="90" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-41" value="&lt;ul&gt;&lt;li style=&quot;text-align: left;&quot;&gt;String Email&amp;nbsp;&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;String Password&lt;/li&gt;&lt;li style=&quot;text-align: left;&quot;&gt;List CarDataFromFirebase&amp;nbsp;&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-39">
+          <mxGeometry x="-20" y="40" width="210" height="80" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-42" value="" style="endArrow=none;dashed=1;html=1;rounded=0;" edge="1" parent="Fe0PGXJzbjRVoJ1PWfsH-39">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="3" y="122" as="sourcePoint" />
+            <mxPoint x="480" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-43" value="&lt;b&gt;Methods:&lt;/b&gt;" style="text;html=1;align=center;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-39">
+          <mxGeometry y="130" width="80" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-44" value="&lt;ul&gt;&lt;li&gt;SignIn()&lt;/li&gt;&lt;li&gt;SignOut()&lt;/li&gt;&lt;li&gt;AddCarToProfile()&lt;/li&gt;&lt;li&gt;DeleteAccount()&lt;/li&gt;&lt;li&gt;RemoveCarFromProfile()&lt;/li&gt;&lt;li&gt;RecoverAccount()&lt;/li&gt;&lt;li&gt;ChangePassword()&lt;/li&gt;&lt;/ul&gt;" style="text;html=1;align=left;verticalAlign=middle;resizable=0;points=[];autosize=1;strokeColor=none;fillColor=none;" vertex="1" parent="Fe0PGXJzbjRVoJ1PWfsH-39">
+          <mxGeometry x="-7.5" y="160" width="200" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-45" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="600" y="-560" as="sourcePoint" />
+            <mxPoint x="535" y="-560" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-60" value="" style="endArrow=classic;html=1;rounded=0;exitX=0.5;exitY=1;exitDx=0;exitDy=0;" edge="1" parent="1" source="Fe0PGXJzbjRVoJ1PWfsH-33">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="540" y="-320" as="sourcePoint" />
+            <mxPoint x="278" y="-290" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-61" value="" style="endArrow=classic;html=1;rounded=0;entryX=0;entryY=0.875;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" target="Fe0PGXJzbjRVoJ1PWfsH-18">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="470" y="-160" as="sourcePoint" />
+            <mxPoint x="560" y="-160" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="Fe0PGXJzbjRVoJ1PWfsH-62" value="" style="endArrow=classic;html=1;rounded=0;" edge="1" parent="1">
+          <mxGeometry width="50" height="50" relative="1" as="geometry">
+            <mxPoint x="819.5" y="20" as="sourcePoint" />
+            <mxPoint x="819.5" y="80" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
