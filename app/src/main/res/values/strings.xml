@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">Car App</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="increment_button_label">Increment Counter</string>
+    <string name="decrement_button_label">Decrement Counter</string>
+
+</resources>
