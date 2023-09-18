@@ -3,28 +3,28 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigationgraph"
-    app:startDestination="@id/firstFragment">
+    app:startDestination="@id/carSearch">
 
     <fragment
-        android:id="@+id/firstFragment"
-        android:name="com.example.carapp.FirstFragment"
-        android:label="fragment_first"
-        tools:layout="@layout/fragment_first" >
+        android:id="@+id/BTConnected"
+        android:name="com.example.carapp.BTConnected"
+        android:label="BTConnected"
+        tools:layout="@layout/fragment_first">
+        <argument
+            android:name="BluetoothLink"
+            app:argType="com.example.carapp.VehicleConnections.BluetoothConnection" />
     </fragment>
+
 
     <fragment
-        android:id="@+id/secondFragment"
-        android:name="com.example.carapp.SecondFragment"
-        android:label="fragment_second"
-        tools:layout="@layout/fragment_second" >
+        android:id="@+id/carSearch"
+        android:name="com.example.carapp.CarSearch"
+        android:label="fragment_car_search"
+        tools:layout="@layout/fragment_car_search" >
+        <action
+            android:id="@+id/linkEstablished"
+            app:destination="@id/BTConnected" />
     </fragment>
 
-    <action
-        android:id="@+id/action_firstFragment_to_secondFragment"
-        app:destination="@id/secondFragment" />
-
-    <action
-        android:id="@+id/action_secondFragment_to_firstFragment"
-        app:destination="@id/firstFragment" />
 
 </navigation>

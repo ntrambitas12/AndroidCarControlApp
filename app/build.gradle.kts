@@ -1,5 +1,6 @@
 plugins {
     id("com.android.application")
+    id("androidx.navigation.safeargs")
 }
 
 android {
@@ -45,5 +46,9 @@ dependencies {
     // Java Lang Support
     implementation("androidx.navigation:navigation-fragment:$navVersion")
     implementation("androidx.navigation:navigation-ui:$navVersion")
+    // OkHTTP API Helper
+    val okHTTPVersion = "4.9.1"
+    implementation("com.squareup.okhttp3:okhttp:$okHTTPVersion" )
+    implementation("com.github.weliem:blessed-android:2.4.2")
 
 }
