@@ -8,4 +8,5 @@ import java.util.ArrayList;
 public interface IBluetooth extends IConnection {
       void startScan(boolean isPairing);
       void connectToTargetDevice(String MACAddress);
+      boolean isBTEnabled();
 }

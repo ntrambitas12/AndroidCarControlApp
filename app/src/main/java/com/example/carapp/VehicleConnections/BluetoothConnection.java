@@ -197,6 +197,11 @@ public class BluetoothConnection implements IBluetooth, Serializable {
     }
 
     @Override
+    public boolean isBTEnabled() {
+        return BTCentralManager.isBluetoothEnabled();
+    }
+
+    @Override
     public void endConnection() {
         BTCentralManager.close();
     }

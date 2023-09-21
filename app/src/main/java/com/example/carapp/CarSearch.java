@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 
 import androidx.activity.result.ActivityResultLauncher;
@@ -11,24 +12,20 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
-import android.widget.Toast;
+import android.widget.ViewFlipper;
 
 import com.example.carapp.VehicleConnections.BluetoothConnection;
 import com.example.carapp.VehicleConnections.IBluetooth;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -37,7 +34,24 @@ public class CarSearch extends Fragment {
     private ListView devicesList;
     private BluetoothViewModel viewModel;
     private BluetoothDeviceAdapter deviceAdapter;
-    private ActivityResultLauncher<Intent> enableBtLauncher;
+    private boolean isLayoutRQEnable = false;
+    private ViewFlipper viewFlipper;
+    private ActivityResultLauncher<Intent> enableBtLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
+        if (!isLayoutRQEnable) {
+            if (result.getResultCode() != Activity.RESULT_OK) {
+                // Show user a screen to turn on Bluetooth to continue pairing
+                isLayoutRQEnable = true;
+                viewFlipper.setDisplayedChild(1);
+            }
+        } else {
+            // In layout 2
+            if (result.getResultCode() == Activity.RESULT_OK) {
+                // Switch back to first layout
+                isLayoutRQEnable = false;
+                viewFlipper.setDisplayedChild(0);
+            }
+        }
+    });
 
     public CarSearch() {
         // Required empty public constructor
@@ -47,16 +61,22 @@ public class CarSearch extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // Initialize Bluetooth-related components
-        initBluetooth();
+        viewModel = new ViewModelProvider(requireActivity()).get(BluetoothViewModel.class);
+        bluetoothLink = new BluetoothConnection(viewModel, getContext());
 
-        // Register observers
-        registerObservers();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_car_search, container, false);
+        View rootView = inflater.inflate(R.layout.fragment_carsearch, container, false);
+        // Setup the button
+        setupRQEnableBTButton(rootView);
+        // Set the viewFlipper
+        viewFlipper = rootView.findViewById(R.id.view_flipper);
+        // Disable auto-rotation for this fragment
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        return rootView;
     }
 
     @Override
@@ -64,6 +84,13 @@ public class CarSearch extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupUI(view);
         observeBluetoothData();
+        if (bluetoothLink.isBTEnabled()) {
+            bluetoothLink.startScan(true); // Set isPairing to true as we want to scan for device{s
+        } else {
+            // Request to have BT enabled
+            Intent turnOnBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            enableBtLauncher.launch(turnOnBluetooth);
+        }
     }
 
     @Override
@@ -73,38 +100,12 @@ public class CarSearch extends Fragment {
         viewModel.clearDiscoveredDevices();
         deviceAdapter.notifyDataSetChanged();
     }
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
 
-
-
-    private void initBluetooth() {
-        enableBtLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
-            if (result.getResultCode() == Activity.RESULT_OK) {
-                viewModel.setBluetoothEnabled(true);
-                bluetoothLink.startScan(true); // Set isPairing to true as we want to scan for devices
-            } else {
-                showBluetoothTurnOnToast();
-            }
-        });
-
-        viewModel = new ViewModelProvider(requireActivity()).get(BluetoothViewModel.class);
-        bluetoothLink = new BluetoothConnection(viewModel, getContext());
-        bluetoothLink.startScan(true); // Set isPairing to true as we want to scan for devices
-    }
-
-    private void registerObservers() {
-        final Observer<Boolean> isBluetoothSupported = device -> {
-            if (!device) {
-                showBluetoothNotSupportedToast();
-            }
-        };
-
-        final Observer<Boolean> isBluetoothOn = state -> {
-            if (!state) {
-                enableBluetooth();
-            }
-        };
-
-        viewModel.bluetoothEnabled.observe(this, isBluetoothOn);
+        // Reset the orientation to allow auto-rotation again
+        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 
     private void setupUI(View view) {
@@ -123,17 +124,25 @@ public class CarSearch extends Fragment {
         };
 
         final Observer<Boolean> isBluetoothDeviceConnected = state -> {
-            showToastOnConnectionStateChange(state);
             if (state) {
                 // Bluetooth device connected, move to the next screen
                 Navigation.findNavController(getView()).navigate(R.id.BTConnected);
             }
         };
 
+
+        final Observer<Boolean> isBluetoothOn = state -> {
+            if (!state) {
+                // If bluetooth state changes while searching, ask user to re-enable
+                Intent turnOnBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+                enableBtLauncher.launch(turnOnBluetooth);
+            }
+        };
+
+        viewModel.bluetoothEnabled.observe(getViewLifecycleOwner(), isBluetoothOn);
         viewModel.discoveredDevices.observe(getViewLifecycleOwner(), foundDevicesObserver);
         viewModel.bluetoothConnected.observe(getViewLifecycleOwner(), isBluetoothDeviceConnected);
     }
-
 
 
     private void setupRefreshButton(View view) {
@@ -145,35 +154,27 @@ public class CarSearch extends Fragment {
         });
     }
 
+    private void setupRQEnableBTButton(View rootView) {
+        // Set up button for RQ BT on layout
+        Button rqBTEnable = rootView.findViewById(R.id.ContinueBTPairing);
+        rqBTEnable.setOnClickListener(click -> {
+            // Request to have BT enabled
+            Intent turnOnBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
+            enableBtLauncher.launch(turnOnBluetooth);
+        });
+    }
+
+
+
     private void setupDeviceListClickListener() {
         devicesList.setOnItemClickListener((adapterView, view1, pos, id) -> {
             BluetoothDevice selectedDevice = deviceAdapter.getItem(pos);
             if (selectedDevice != null) {
-                initiatePairingProcess(selectedDevice);
+                // Logic to start the pairing process
+                bluetoothLink.connectToTargetDevice(selectedDevice.getAddress());
             }
         });
     }
 
-    private void showBluetoothTurnOnToast() {
-        Toast.makeText(getContext(), "Turn Bluetooth on to connect", Toast.LENGTH_LONG).show();
-    }
 
-    private void showBluetoothNotSupportedToast() {
-        Toast.makeText(getContext(), getString(R.string.bluetooth_not_supported), Toast.LENGTH_LONG).show();
-    }
-
-    private void enableBluetooth() {
-        Intent turnOnBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
-        enableBtLauncher.launch(turnOnBluetooth);
-    }
-
-    private void showToastOnConnectionStateChange(boolean isConnected) {
-        Toast toast = Toast.makeText(getContext(), isConnected ? "Connected!" : "Disconnected", Toast.LENGTH_LONG);
-        toast.show();
-    }
-
-    private void initiatePairingProcess(BluetoothDevice selectedDevice) {
-        // Logic to start the pairing process
-        bluetoothLink.connectToTargetDevice(selectedDevice.getAddress());
-    }
 }

@@ -16,7 +16,7 @@
         android:id="@+id/carSearch"
         android:name="com.example.carapp.CarSearch"
         android:label="fragment_car_search"
-        tools:layout="@layout/fragment_car_search" >
+        tools:layout="@layout/bluetooth_search" >
         <action
             android:id="@+id/action_carSearch_to_BTConnected"
             app:destination="@id/BTConnected" />
