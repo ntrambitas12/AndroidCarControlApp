@@ -75,7 +75,7 @@ public class CarSearch extends Fragment {
         // Set the viewFlipper
         viewFlipper = rootView.findViewById(R.id.view_flipper);
         // Disable auto-rotation for this fragment
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+      getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         return rootView;
     }
 
@@ -96,32 +96,27 @@ public class CarSearch extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-       // bluetoothLink.endConnection();
-        viewModel.clearDiscoveredDevices();
-        deviceAdapter.notifyDataSetChanged();
+    viewModel.clearDiscoveredDevices();
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
 
         // Reset the orientation to allow auto-rotation again
-        getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
+      getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
+
 
     private void setupUI(View view) {
         devicesList = view.findViewById(R.id.deviceList);
-        deviceAdapter = new BluetoothDeviceAdapter(getActivity(), new ArrayList<>());
+        deviceAdapter = viewModel.getDeviceAdapter(getActivity());
         devicesList.setAdapter(deviceAdapter);
         setupRefreshButton(view);
         setupDeviceListClickListener();
     }
 
     private void observeBluetoothData() {
-        final Observer<List<BluetoothDevice>> foundDevicesObserver = devices -> {
-            deviceAdapter.clear();
-            deviceAdapter.addAll(devices);
-            deviceAdapter.notifyDataSetChanged();
-        };
+
 
         final Observer<Boolean> isBluetoothDeviceConnected = state -> {
             if (state) {
@@ -140,7 +135,6 @@ public class CarSearch extends Fragment {
         };
 
         viewModel.bluetoothEnabled.observe(getViewLifecycleOwner(), isBluetoothOn);
-        viewModel.discoveredDevices.observe(getViewLifecycleOwner(), foundDevicesObserver);
         viewModel.bluetoothConnected.observe(getViewLifecycleOwner(), isBluetoothDeviceConnected);
     }
 
@@ -148,9 +142,7 @@ public class CarSearch extends Fragment {
     private void setupRefreshButton(View view) {
         Button refresh = view.findViewById(R.id.refreshButton);
         refresh.setOnClickListener(click -> {
-            deviceAdapter.clear();
             viewModel.clearDiscoveredDevices();
-            deviceAdapter.notifyDataSetChanged();
         });
     }
 
