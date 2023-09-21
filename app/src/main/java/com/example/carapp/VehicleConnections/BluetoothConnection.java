@@ -52,6 +52,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 
 public class BluetoothConnection implements IBluetooth, Serializable {
     private JSONObject carState;
@@ -100,19 +101,20 @@ public class BluetoothConnection implements IBluetooth, Serializable {
         public void onDiscoveredPeripheral(@NonNull BluetoothPeripheral peripheral, @NonNull ScanResult scanResult) {
             // Create two branches, one for trying to connect to a known device
             // and another for trying to pair to a new device
-            if(isPairing) {
+            if (isPairing) {
                 // Code here to add discovered devices to the list so that user can pair to them
                 viewModel.addDiscoveredDevice(scanResult.getDevice());
             } else {
                 // We want to just connect to a device already bonded
-                    if (peripheral.getBondState() == BondState.BONDED) {
-                        // If it is, stop scanning and directly connect to it
-                        BTCentralManager.stopScan();
-                        BTCentralManager.connectPeripheral(peripheral, peripheralCallback);
+                if (peripheral.getBondState() == BondState.BONDED) {
+                    // If it is, stop scanning and directly connect to it
+                    BTCentralManager.stopScan();
+                    BTCentralManager.connectPeripheral(peripheral, peripheralCallback);
                 }
             }
 
         }
+
         @Override
         public void onBluetoothAdapterStateChanged(int state) {
             if (state == BluetoothAdapter.STATE_ON) {
@@ -135,11 +137,32 @@ public class BluetoothConnection implements IBluetooth, Serializable {
             // Set servicesDiscovered to true
             servicesDiscovered = true;
             viewModel.setBluetoothConnected(true);
+
+            // Set to automatically trigger callback for when car writes new data
+            if (connectedPeripheral != null) {
+                BluetoothGattService service = connectedPeripheral.getService(esp32ServiceUUID);
+                BluetoothGattCharacteristic characteristic = service.getCharacteristic(esp32CharacteristicUUID);
+
+                // Set up callback to retrieve the new status from the car
+                connectedPeripheral.setNotify(characteristic, true);
+            }
         }
 
         @Override
         public void onCharacteristicUpdate(@NonNull BluetoothPeripheral peripheral, @NonNull byte[] value, @NonNull BluetoothGattCharacteristic characteristic, @NonNull GattStatus status) {
             super.onCharacteristicUpdate(peripheral, value, characteristic, status);
+            if (status == GattStatus.SUCCESS) {
+                // Save the current state of the car
+                // Parse byte[] as string
+                String jsonString = new String(value);
+
+                // Try to parse resp as a carObj
+                try {
+                    carState = new JSONObject(jsonString);
+                } catch (JSONException e) {
+                    throw new RuntimeException(e);
+                }
+            }
         }
 
         @Override
@@ -170,10 +193,11 @@ public class BluetoothConnection implements IBluetooth, Serializable {
 
         carState = new JSONObject();
         BTCentralManager = new BluetoothCentralManager(this.context, BTCentralManagerCallback,
-                new Handler(Looper.getMainLooper()) );
+                new Handler(Looper.getMainLooper()));
 
 
     }
+
     // Method to start scanning for ESP32 device. Activity needs to set whether to go into pairing
     // or if to reconnect to a bonded device
     public void startScan(boolean isPairing) {
@@ -202,12 +226,17 @@ public class BluetoothConnection implements IBluetooth, Serializable {
     }
 
     @Override
+    public boolean isConnected() {
+        return viewModel.bluetoothConnected.getValue();
+    }
+
+    @Override
     public void endConnection() {
         BTCentralManager.close();
     }
 
     @Override
-    public void sendToCar(String Payload) {
+    public void sendToCar(Command Payload) {
         // Ensure that we have a device connected
         if (connectedPeripheral != null) {
             BluetoothGattService service = connectedPeripheral.getService(esp32ServiceUUID);
@@ -215,29 +244,19 @@ public class BluetoothConnection implements IBluetooth, Serializable {
                 BluetoothGattCharacteristic characteristic = service.getCharacteristic(esp32CharacteristicUUID);
 
                 // Send data by writing to the characteristic
-                byte[] data = Payload.getBytes();
+                byte[] data = String.valueOf(Payload).getBytes();
                 connectedPeripheral.writeCharacteristic(characteristic, data, WriteType.WITHOUT_RESPONSE);
             }
         }
     }
 
     @Override
-    public void receiveFromCar() {
-        // Ensure that we have a device connected
-        if (connectedPeripheral != null) {
-            BluetoothGattService service = connectedPeripheral.getService(esp32ServiceUUID);
-            BluetoothGattCharacteristic characteristic = service.getCharacteristic(esp32CharacteristicUUID);
-
-            // Send command to update state from car
-            connectedPeripheral.readCharacteristic(characteristic);
+    public JSONObject receiveFromCar() {
+        // Return either an empty JSON or carState. CarState will eventually get set
+        if (this.carState == null) {
+            return  new JSONObject();
+        } else {
+            return this.carState;
         }
-
     }
-    @Override
-    public JSONObject getCarState() {
-        return this.carState;
-    }
-
-
 }
-

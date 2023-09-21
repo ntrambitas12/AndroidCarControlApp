@@ -17,11 +17,11 @@ public interface IConnection {
     /*
         Sends a command formatted as a String to the car.
      */
-    public void sendToCar(String Payload);
+    public void sendToCar(Command Payload);
 
-     public void receiveFromCar();
+     public JSONObject receiveFromCar();
 
-       /* Returns the car's current state as an object
+
+    /* Returns the car's current state as an object
      */
-    public JSONObject getCarState();
 }

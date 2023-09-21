@@ -21,6 +21,9 @@ public class WebConnection implements IConnection{
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private final OkHttpClient client;
     private final String VIN;
+    private final Object lock = new Object(); // Create a synchronization lock
+    private volatile boolean isFetching = false; // Flag to ensure only 1 background thread can be created
+
 
     public WebConnection(Activity activity, String VIN) {
         this.activity = activity;
@@ -40,10 +43,10 @@ public class WebConnection implements IConnection{
     }
 
     @Override
-    public void sendToCar(String Payload) {
+    public void sendToCar(Command Payload) {
         new Thread(() -> {
             // Create the request body
-            RequestBody requestBody = RequestBody.create(Payload, JSON);
+            RequestBody requestBody = RequestBody.create(String.valueOf(Payload), JSON);
 
             // Create PUT request
             Request request = new Request.Builder()
@@ -62,31 +65,55 @@ public class WebConnection implements IConnection{
     }
 
 @Override
-    public void receiveFromCar() {
-        new Thread(() -> {
+public JSONObject receiveFromCar() {
+    synchronized (lock) {
+        // Check if a background thread is already fetching
+        if (isFetching) {
+            // A background thread is already fetching the car state, return the current state or an empty JSON
+            if (carState == null) {
+                return new JSONObject();
+            } else {
+                return carState;
+            }
+        }
 
+        // Mark that a fetch operation is in progress
+        isFetching = true;
+    }
+
+    // Create a new thread to fetch the car state
+    new Thread(() -> {
+        try {
             // Create GET request
             Request request = new Request.Builder()
                     .url(this.URL)
                     .addHeader("set-vin", this.VIN)
                     .build();
 
-                try (Response response = client.newCall(request).execute()) {
-                    if (response.isSuccessful()) {
-                        assert response.body() != null;
-                        this.carState = new JSONObject(response.body().string());
-                    }
+            try (Response response = client.newCall(request).execute()) {
+                if (response.isSuccessful()) {
+                    assert response.body() != null;
+                    this.carState = new JSONObject(response.body().string());
                 }
-             catch (IOException | JSONException e) {
-                throw new RuntimeException(e);
+            } catch (IOException | JSONException e) {
                 // Unable to connect to webServer
+                this.carState = new JSONObject(); // Set carState as an empty JSON
             }
-        }).start();
-    }
+        } finally {
+            synchronized (lock) {
+                // Mark the fetch operation as completed
+                isFetching = false;
+            }
+        }
+    }).start();
 
-    @Override
-    public JSONObject getCarState() {
-        return this.carState;
+    // Return the current state
+    if (carState == null) {
+        return new JSONObject();
+    } else {
+        return carState;
     }
+}
+
 
 }
