@@ -7,14 +7,14 @@
 
     <fragment
         android:id="@+id/BTConnected"
-        android:name="com.example.carapp.BTConnected"
+        android:name="com.example.carapp.Fragments.BTConnected"
         android:label="BTConnected"
         tools:layout="@layout/fragment_first"/>
 
 
     <fragment
         android:id="@+id/carSearch"
-        android:name="com.example.carapp.CarSearch"
+        android:name="com.example.carapp.Fragments.CarSearch"
         android:label="fragment_car_search"
         tools:layout="@layout/bluetooth_search" >
         <action
@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/requestPermissions2"
-        android:name="com.example.carapp.RequestPermissions"
+        android:name="com.example.carapp.Fragments.RequestPermissions"
         android:label="fragment_request_permissions"
         tools:layout="@layout/fragment_request_permissions" >
         <action

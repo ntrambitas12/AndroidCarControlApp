@@ -1,4 +1,4 @@
-package com.example.carapp;
+package com.example.carapp.Adapters;
 
 import android.annotation.SuppressLint;
 import android.bluetooth.BluetoothDevice;
@@ -10,6 +10,8 @@ import android.widget.ArrayAdapter;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+
+import com.example.carapp.R;
 
 import java.util.List;
 

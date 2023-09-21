@@ -1,4 +1,4 @@
-package com.example.carapp;
+package com.example.carapp.Fragments;
 
 import android.Manifest;
 import android.content.Context;
@@ -20,6 +20,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
+
+import com.example.carapp.R;
 
 public class RequestPermissions extends Fragment {
 

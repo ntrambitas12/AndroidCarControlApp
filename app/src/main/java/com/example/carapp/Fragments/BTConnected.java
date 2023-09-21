@@ -1,4 +1,4 @@
-package com.example.carapp;
+package com.example.carapp.Fragments;
 
 import android.os.Bundle;
 
@@ -10,10 +10,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-import com.example.carapp.VehicleConnections.BluetoothConnection;
-import com.example.carapp.VehicleConnections.IBluetooth;
-
-import java.io.Serializable;
+import com.example.carapp.R;
 
 /**
  * A simple {@link Fragment} subclass.

@@ -1,4 +1,4 @@
-package com.example.carapp;
+package com.example.carapp.Fragments;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothAdapter;
@@ -23,11 +23,11 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.ViewFlipper;
 
+import com.example.carapp.Adapters.BluetoothDeviceAdapter;
+import com.example.carapp.ViewModels.BluetoothViewModel;
+import com.example.carapp.R;
 import com.example.carapp.VehicleConnections.BluetoothConnection;
 import com.example.carapp.VehicleConnections.IBluetooth;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class CarSearch extends Fragment {
     private IBluetooth bluetoothLink;

@@ -1,13 +1,15 @@
-package com.example.carapp;
+package com.example.carapp.ViewModels;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
-import androidx.lifecycle.LiveData;
+
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
+
+import com.example.carapp.Adapters.BluetoothDeviceAdapter;
+
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 public class BluetoothViewModel extends ViewModel {
