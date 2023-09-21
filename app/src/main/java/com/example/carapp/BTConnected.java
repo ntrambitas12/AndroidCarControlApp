@@ -25,8 +25,6 @@ public class BTConnected extends Fragment {
 
     private static final String ARG_PARAM1 = "BluetoothLink";
 
-    // Variable to store bluetooth link
-    private IBluetooth bluetoothLink;
 
 
     public BTConnected() {
@@ -44,8 +42,7 @@ public class BTConnected extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        BTConnectedArgs args = BTConnectedArgs.fromBundle(getArguments());
-        bluetoothLink = args.getBluetoothLink();
+
 
 
        Button increment = view.findViewById(R.id.incrementCounter);
@@ -56,10 +53,10 @@ public class BTConnected extends Fragment {
 
             // Set onClickEvent Listener
             increment.setOnClickListener(click -> {
-                bluetoothLink.sendToCar("Test");
+                // bluetoothLink.sendToCar("Test");
             });
             decrement.setOnClickListener(click -> {
-                bluetoothLink.sendToCar("Bye");
+               // bluetoothLink.sendToCar("Bye");
             });
 
     }
@@ -67,6 +64,6 @@ public class BTConnected extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
-        bluetoothLink.endConnection();
+      //  bluetoothLink.endConnection();
     }
 }

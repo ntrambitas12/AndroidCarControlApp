@@ -60,8 +60,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
     private Context context;
 
     private boolean isPairing = false;
-
-    //New testing
+    private boolean servicesDiscovered = false;
     private BluetoothCentralManager BTCentralManager;
     private BluetoothPeripheral connectedPeripheral;
     private final Handler handler = new Handler();
@@ -83,8 +82,6 @@ public class BluetoothConnection implements IBluetooth, Serializable {
             isPairing = false;
             // Save the connected device
             connectedPeripheral = peripheral;
-            // Set bluetooth connected
-            viewModel.setBluetoothConnected(true);
         }
 
         @Override
@@ -132,20 +129,39 @@ public class BluetoothConnection implements IBluetooth, Serializable {
         }
     };
     private final BluetoothPeripheralCallback peripheralCallback = new BluetoothPeripheralCallback() {
-        /**
-         * Callback invoked as the result of a characteristic read operation or notification/indication
-         *
-         * @param peripheral     the peripheral
-         * @param value          the new value received
-         * @param characteristic the characteristic for which the new value was received
-         * @param status         GATT status code
-         */
+        @Override
+        public void onServicesDiscovered(@NonNull BluetoothPeripheral peripheral) {
+            super.onServicesDiscovered(peripheral);
+            // Set servicesDiscovered to true
+            servicesDiscovered = true;
+            viewModel.setBluetoothConnected(true);
+        }
+
         @Override
         public void onCharacteristicUpdate(@NonNull BluetoothPeripheral peripheral, @NonNull byte[] value, @NonNull BluetoothGattCharacteristic characteristic, @NonNull GattStatus status) {
             super.onCharacteristicUpdate(peripheral, value, characteristic, status);
-            // Pull out the data read
         }
 
+        @Override
+        public void onCharacteristicWrite(@NonNull BluetoothPeripheral peripheral, @NonNull byte[] value, @NonNull BluetoothGattCharacteristic characteristic, @NonNull GattStatus status) {
+            super.onCharacteristicWrite(peripheral, value, characteristic, status);
+        }
+
+        @Override
+        public void onBondingStarted(@NonNull BluetoothPeripheral peripheral) {
+            super.onBondingStarted(peripheral);
+        }
+
+        @Override
+        public void onBondingSucceeded(@NonNull BluetoothPeripheral peripheral) {
+            super.onBondingSucceeded(peripheral);
+
+        }
+
+        @Override
+        public void onBondingFailed(@NonNull BluetoothPeripheral peripheral) {
+            super.onBondingFailed(peripheral);
+        }
     };
 
     public BluetoothConnection(BluetoothViewModel viewModel, Context context) {

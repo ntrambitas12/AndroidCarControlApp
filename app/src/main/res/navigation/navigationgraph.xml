@@ -3,17 +3,13 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigationgraph"
-    app:startDestination="@id/carSearch">
+    app:startDestination="@id/requestPermissions2">
 
     <fragment
         android:id="@+id/BTConnected"
         android:name="com.example.carapp.BTConnected"
         android:label="BTConnected"
-        tools:layout="@layout/fragment_first">
-        <argument
-            android:name="BluetoothLink"
-            app:argType="com.example.carapp.VehicleConnections.BluetoothConnection" />
-    </fragment>
+        tools:layout="@layout/fragment_first"/>
 
 
     <fragment
@@ -22,8 +18,17 @@
         android:label="fragment_car_search"
         tools:layout="@layout/fragment_car_search" >
         <action
-            android:id="@+id/linkEstablished"
+            android:id="@+id/action_carSearch_to_BTConnected"
             app:destination="@id/BTConnected" />
+    </fragment>
+    <fragment
+        android:id="@+id/requestPermissions2"
+        android:name="com.example.carapp.RequestPermissions"
+        android:label="fragment_request_permissions"
+        tools:layout="@layout/fragment_request_permissions" >
+        <action
+            android:id="@+id/action_requestPermissions2_to_carSearch"
+            app:destination="@id/carSearch" />
     </fragment>
 
 

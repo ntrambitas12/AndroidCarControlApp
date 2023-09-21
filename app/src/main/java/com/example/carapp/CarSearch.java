@@ -63,14 +63,13 @@ public class CarSearch extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         setupUI(view);
-        bluetoothLink.startScan(true); // Set isPairing to true as we want to scan for devices
         observeBluetoothData();
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        bluetoothLink.endConnection();
+       // bluetoothLink.endConnection();
         viewModel.clearDiscoveredDevices();
         deviceAdapter.notifyDataSetChanged();
     }
@@ -89,6 +88,7 @@ public class CarSearch extends Fragment {
 
         viewModel = new ViewModelProvider(requireActivity()).get(BluetoothViewModel.class);
         bluetoothLink = new BluetoothConnection(viewModel, getContext());
+        bluetoothLink.startScan(true); // Set isPairing to true as we want to scan for devices
     }
 
     private void registerObservers() {
@@ -126,8 +126,7 @@ public class CarSearch extends Fragment {
             showToastOnConnectionStateChange(state);
             if (state) {
                 // Bluetooth device connected, move to the next screen
-                NavDirections action = CarSearchDirections.linkEstablished((BluetoothConnection) bluetoothLink);
-                Navigation.findNavController(getView()).navigate(action);
+                Navigation.findNavController(getView()).navigate(R.id.BTConnected);
             }
         };
 
