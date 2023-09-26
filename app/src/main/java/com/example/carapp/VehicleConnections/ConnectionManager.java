@@ -10,14 +10,20 @@ public class ConnectionManager implements IConnection{
     private  IConnection WebLink;
     private ConnectionManager(IBluetooth BluetoothLink, IConnection WebLink) {
         // ConnectionManager Constructor
+        this.BluetoothLink = BluetoothLink;
+        this.WebLink = WebLink;
     }
 
     // Static method to create an instance of ConnectionManager
-    public static synchronized ConnectionManager getInstance(IBluetooth BluetoothLink, IConnection WebLink) {
+    public static synchronized ConnectionManager createInstance(IBluetooth BluetoothLink, IConnection WebLink) {
         if (instance == null) {
             instance = new ConnectionManager(BluetoothLink,  WebLink);
         }
-        return  instance;
+        return instance;
+    }
+
+    public static synchronized ConnectionManager getInstance() {
+        return instance;
     }
 
     @Override
@@ -37,14 +43,12 @@ public class ConnectionManager implements IConnection{
 
 
     @Override
-    public JSONObject receiveFromCar() {
-        JSONObject carState;
+    public void receiveFromCar() {
         // If connected via Bluetooth, receive via Bluetooth
         if (BluetoothLink.isBTEnabled() && BluetoothLink.isConnected()) {
-            carState = BluetoothLink.receiveFromCar();
+             BluetoothLink.receiveFromCar();
         } else {
-           carState = WebLink.receiveFromCar();
+           WebLink.receiveFromCar();
         }
-        return carState;
     }
 }

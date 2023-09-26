@@ -19,7 +19,7 @@ public interface IConnection {
      */
     public void sendToCar(Command Payload);
 
-     public JSONObject receiveFromCar();
+     public void receiveFromCar();
 
 
     /* Returns the car's current state as an object

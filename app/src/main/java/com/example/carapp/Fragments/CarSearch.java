@@ -24,15 +24,19 @@ import android.widget.ListView;
 import android.widget.ViewFlipper;
 
 import com.example.carapp.Adapters.BluetoothDeviceAdapter;
+import com.example.carapp.VehicleConnections.ConnectionManager;
+import com.example.carapp.VehicleConnections.WebConnection;
 import com.example.carapp.ViewModels.BluetoothViewModel;
 import com.example.carapp.R;
 import com.example.carapp.VehicleConnections.BluetoothConnection;
 import com.example.carapp.VehicleConnections.IBluetooth;
+import com.example.carapp.ViewModels.carStateViewModel;
 
 public class CarSearch extends Fragment {
     private IBluetooth bluetoothLink;
     private ListView devicesList;
     private BluetoothViewModel viewModel;
+    private carStateViewModel carState;
     private BluetoothDeviceAdapter deviceAdapter;
     private boolean isLayoutRQEnable = false;
     private ViewFlipper viewFlipper;
@@ -62,7 +66,8 @@ public class CarSearch extends Fragment {
         super.onCreate(savedInstanceState);
         // Initialize Bluetooth-related components
         viewModel = new ViewModelProvider(requireActivity()).get(BluetoothViewModel.class);
-        bluetoothLink = new BluetoothConnection(viewModel, getContext());
+        carState= new ViewModelProvider(requireActivity()).get(carStateViewModel.class);
+        bluetoothLink = new BluetoothConnection(viewModel, carState, getContext());
 
     }
 
@@ -121,6 +126,7 @@ public class CarSearch extends Fragment {
         final Observer<Boolean> isBluetoothDeviceConnected = state -> {
             if (state) {
                 // Bluetooth device connected, move to the next screen
+                ConnectionManager.createInstance(bluetoothLink, new WebConnection("TEST123", "www.test.com", carState));
                 Navigation.findNavController(getView()).navigate(R.id.BTConnected);
             }
         };

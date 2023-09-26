@@ -11,6 +11,8 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.example.carapp.R;
+import com.example.carapp.VehicleConnections.Command;
+import com.example.carapp.VehicleConnections.ConnectionManager;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -50,10 +52,10 @@ public class BTConnected extends Fragment {
 
             // Set onClickEvent Listener
             increment.setOnClickListener(click -> {
-                // bluetoothLink.sendToCar("Test");
+                ConnectionManager.getInstance().sendToCar(Command.AlarmOn);
             });
             decrement.setOnClickListener(click -> {
-               // bluetoothLink.sendToCar("Bye");
+                ConnectionManager.getInstance().sendToCar(Command.AlarmOff);
             });
 
     }

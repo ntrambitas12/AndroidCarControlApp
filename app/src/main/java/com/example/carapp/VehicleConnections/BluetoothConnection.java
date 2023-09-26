@@ -11,6 +11,7 @@ import android.os.Looper;
 import androidx.annotation.NonNull;
 
 import com.example.carapp.ViewModels.BluetoothViewModel;
+import com.example.carapp.ViewModels.carStateViewModel;
 import com.welie.blessed.BluetoothCentralManager;
 import com.welie.blessed.BluetoothCentralManagerCallback;
 import com.welie.blessed.BluetoothPeripheral;
@@ -24,12 +25,15 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.Serializable;
+import java.util.LinkedList;
+import java.util.Queue;
 import java.util.UUID;
 
 public class BluetoothConnection implements IBluetooth, Serializable {
-    private JSONObject carState;
+    private Queue<JSONObject> carStateQueue;
 
     private BluetoothViewModel viewModel;
+    private carStateViewModel carStateViewModel;
     private Context context;
 
     private boolean isPairing = false;
@@ -46,7 +50,6 @@ public class BluetoothConnection implements IBluetooth, Serializable {
         public void onConnectedPeripheral(BluetoothPeripheral peripheral) {
             // Called when successfully connected. Ready to use device
             if (peripheral.getBondState() == BondState.NONE) {
-                // Bond the connected device to reconnect to it later
                 peripheral.createBond();
             }
             // Now that device is connected, we can stop scanning
@@ -116,7 +119,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
                 BluetoothGattCharacteristic characteristic = service.getCharacteristic(esp32CharacteristicUUID);
 
                 // Set up callback to retrieve the new status from the car
-                connectedPeripheral.setNotify(characteristic, true);
+                //connectedPeripheral.setNotify(characteristic, true);
             }
         }
 
@@ -130,7 +133,8 @@ public class BluetoothConnection implements IBluetooth, Serializable {
 
                 // Try to parse resp as a carObj
                 try {
-                    carState = new JSONObject(jsonString);
+                    // Add newly received carState data to the queue
+                    carStateQueue.add(new JSONObject(jsonString));
                 } catch (JSONException e) {
                     throw new RuntimeException(e);
                 }
@@ -154,16 +158,22 @@ public class BluetoothConnection implements IBluetooth, Serializable {
         }
 
         @Override
+        public void onBondLost(@NonNull BluetoothPeripheral peripheral) {
+            super.onBondLost(peripheral);
+        }
+
+        @Override
         public void onBondingFailed(@NonNull BluetoothPeripheral peripheral) {
             super.onBondingFailed(peripheral);
         }
     };
 
-    public BluetoothConnection(BluetoothViewModel viewModel, Context context) {
+    public BluetoothConnection(BluetoothViewModel viewModel, carStateViewModel carStateViewModel, Context context) {
         this.viewModel = viewModel;
         this.context = context;
+        this.carStateViewModel = carStateViewModel;
 
-        carState = new JSONObject();
+        carStateQueue = new LinkedList<>();
         BTCentralManager = new BluetoothCentralManager(this.context, BTCentralManagerCallback,
                 new Handler(Looper.getMainLooper()));
 
@@ -217,18 +227,16 @@ public class BluetoothConnection implements IBluetooth, Serializable {
 
                 // Send data by writing to the characteristic
                 byte[] data = String.valueOf(Payload).getBytes();
-                connectedPeripheral.writeCharacteristic(characteristic, data, WriteType.WITHOUT_RESPONSE);
+                connectedPeripheral.writeCharacteristic(characteristic, data, WriteType.WITH_RESPONSE);
             }
         }
     }
 
     @Override
-    public JSONObject receiveFromCar() {
-        // Return either an empty JSON or carState. CarState will eventually get set
-        if (this.carState == null) {
-            return  new JSONObject();
-        } else {
-            return this.carState;
+    public void receiveFromCar() {
+       // Push the data to the carState viewModel if Queue is not empty
+        if (!carStateQueue.isEmpty()) {
+            carStateViewModel.updateCarState(carStateQueue.remove());
         }
     }
 }
