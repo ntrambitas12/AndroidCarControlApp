@@ -235,6 +235,8 @@ public class BluetoothConnection implements IBluetooth, Serializable {
     @Override
     public void receiveFromCar() {
        // Push the data to the carState viewModel if Queue is not empty
+        /* Using queue approach instead of directly updating state on BLE callback
+        to remain consistent with WebConnection */
         if (!carStateQueue.isEmpty()) {
             carStateViewModel.updateCarState(carStateQueue.remove());
         }
