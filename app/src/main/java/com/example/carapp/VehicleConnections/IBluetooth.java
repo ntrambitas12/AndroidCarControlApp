@@ -10,4 +10,5 @@ public interface IBluetooth extends IConnection {
       void connectToTargetDevice(String MACAddress);
       boolean isBTEnabled();
       boolean isConnected();
+      void requestBond();
 }

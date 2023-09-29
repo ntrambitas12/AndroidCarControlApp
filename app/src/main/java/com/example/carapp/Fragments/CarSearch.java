@@ -14,8 +14,10 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import android.os.Handler;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -40,6 +42,7 @@ public class CarSearch extends Fragment {
     private BluetoothDeviceAdapter deviceAdapter;
     private boolean isLayoutRQEnable = false;
     private ViewFlipper viewFlipper;
+    private boolean instanceExists = ConnectionManager.getInstance() != null;
     private ActivityResultLauncher<Intent> enableBtLauncher = registerForActivityResult(new ActivityResultContracts.StartActivityForResult(), result -> {
         if (!isLayoutRQEnable) {
             if (result.getResultCode() != Activity.RESULT_OK) {
@@ -67,7 +70,12 @@ public class CarSearch extends Fragment {
         // Initialize Bluetooth-related components
         viewModel = new ViewModelProvider(requireActivity()).get(BluetoothViewModel.class);
         carState= new ViewModelProvider(requireActivity()).get(carStateViewModel.class);
-        bluetoothLink = new BluetoothConnection(viewModel, carState, getContext());
+        // Verify that a bluetooth link wasn't already created
+        if (!instanceExists) {
+            bluetoothLink = new BluetoothConnection(viewModel, carState, getContext());
+        } else {
+            bluetoothLink = ConnectionManager.getInstance().getBluetoothLink();
+        }
 
     }
 
@@ -126,8 +134,11 @@ public class CarSearch extends Fragment {
         final Observer<Boolean> isBluetoothDeviceConnected = state -> {
             if (state) {
                 // Bluetooth device connected, move to the next screen
-                ConnectionManager.createInstance(bluetoothLink, new WebConnection("TEST123", "www.test.com", carState));
-                Navigation.findNavController(getView()).navigate(R.id.BTConnected);
+                if (!instanceExists){
+                    ConnectionManager.createInstance(bluetoothLink, new WebConnection("TEST123", "www.test.com", carState));
+                }
+                NavDirections actionConfirmVIN = CarSearchDirections.actionCarSearchToConfirmCarSelection();
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionConfirmVIN);
             }
         };
 

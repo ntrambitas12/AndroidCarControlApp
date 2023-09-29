@@ -19,7 +19,6 @@ public class BluetoothViewModel extends ViewModel {
     private BluetoothDeviceAdapter deviceAdapter;
     private Set<BluetoothDevice> discoveredDevices = new HashSet<>();
 
-
     // Add a new discovered device to the list
     public void addDiscoveredDevice(BluetoothDevice device) {
 

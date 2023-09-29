@@ -18,8 +18,8 @@
         android:label="fragment_car_search"
         tools:layout="@layout/bluetooth_search" >
         <action
-            android:id="@+id/action_carSearch_to_BTConnected"
-            app:destination="@id/BTConnected" />
+            android:id="@+id/action_carSearch_to_confirmCarSelection"
+            app:destination="@id/confirmCarSelection" />
     </fragment>
     <fragment
         android:id="@+id/requestPermissions2"
@@ -29,6 +29,18 @@
         <action
             android:id="@+id/action_requestPermissions2_to_carSearch"
             app:destination="@id/carSearch" />
+    </fragment>
+    <fragment
+        android:id="@+id/confirmCarSelection"
+        android:name="com.example.carapp.Fragments.ConfirmCarSelection"
+        android:label="fragment_confirm_car_selection"
+        tools:layout="@layout/bluetooth_confirm_car_selection" >
+        <action
+            android:id="@+id/action_confirmCarSelection_to_carSearch"
+            app:destination="@id/carSearch" />
+        <action
+            android:id="@+id/action_confirmCarSelection_to_BTConnected"
+            app:destination="@id/BTConnected" />
     </fragment>
 
 

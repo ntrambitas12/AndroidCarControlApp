@@ -50,5 +50,5 @@ dependencies {
     val okHTTPVersion = "4.9.1"
     implementation("com.squareup.okhttp3:okhttp:$okHTTPVersion" )
     implementation("com.github.weliem:blessed-android:2.4.2")
-
+    implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.22")
 }

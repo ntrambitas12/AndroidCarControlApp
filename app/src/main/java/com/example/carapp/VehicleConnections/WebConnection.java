@@ -23,8 +23,8 @@ public class WebConnection implements IConnection{
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private final OkHttpClient client;
     private final String VIN;
-    private final ExecutorService executorServiceUpdate = Executors.newSingleThreadExecutor();
-    private final ExecutorService executorServiceReceive = Executors.newSingleThreadExecutor();
+    private final ExecutorService executorService = Executors.newFixedThreadPool(2);
+
 
 
     public WebConnection(String VIN, String Address, carStateViewModel carStateViewModel) {
@@ -42,7 +42,7 @@ public class WebConnection implements IConnection{
 
     @Override
     public void sendToCar(Command Payload) {
-        executorServiceUpdate.submit(() -> {
+        executorService.submit(() -> {
             try {
                 // Create the request body
                 RequestBody requestBody = RequestBody.create(String.valueOf(Payload), JSON);
@@ -64,7 +64,7 @@ public class WebConnection implements IConnection{
 @Override
 public void receiveFromCar() {
     // Create a new thread to fetch the car state
-    executorServiceReceive.submit(() -> {
+    executorService.submit(() -> {
         try {
             // Create GET request
             Request request = new Request.Builder()
