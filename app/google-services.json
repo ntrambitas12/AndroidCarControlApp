@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "125241453695",
+    "project_id": "androidcarcontrolapp",
+    "storage_bucket": "androidcarcontrolapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:125241453695:android:303de819831344cd4f234a",
+        "android_client_info": {
+          "package_name": "com.example.carapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyB87eeH_fy52Z2_LV-_eY2eYtl-S7prKEs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

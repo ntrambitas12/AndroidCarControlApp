@@ -1,8 +1,10 @@
 package com.example.carapp;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -10,15 +12,22 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.auth.AuthResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+
 
 public class LoginFragment extends Fragment {
 
 
     private static final String ARG_PARAM1 = "CounterRef";
+    private static final String TAG = "EmailPassword";
+    private FirebaseAuth mAuth;
 
     // Variable to store Counter ref
     private Counter mParam1;
-
 
     public LoginFragment() {
         // Provide the XML layout of the fragment to base constructor here
@@ -29,6 +38,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
         // if any arguments are passed, pull them out here
         System.out.println("Created fragment");
     }
@@ -60,7 +70,7 @@ public class LoginFragment extends Fragment {
                 if (view.getId() == R.id.login) {
                     //call script to check if login details are a user within the database
                     //and go to main app view
-
+                    // Get email and password text & call signIn method
                 }
                 else if (view.getId() == R.id.SignUp) {
                     //switch fragment to signup view
@@ -69,5 +79,21 @@ public class LoginFragment extends Fragment {
                 }
             }
         };
+    }
+
+    public void signIn(String email, String password) {
+        mAuth.signInWithEmailAndPassword(email, password)
+                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                    @Override
+                    public void onComplete(@NonNull Task<AuthResult> task) {
+                        if (task.isSuccessful()) {
+                            Log.d(TAG, "signInWithEmail:success");
+                            FirebaseUser user = mAuth.getCurrentUser();
+                        } else {
+                            Log.w(TAG, "signInWithEmail:failure", task.getException());
+                            Toast.makeText(getActivity(), "Authentication failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
     }
 }
