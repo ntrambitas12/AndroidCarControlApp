@@ -18,6 +18,7 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import android.os.Handler;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,6 +36,7 @@ import com.example.carapp.VehicleConnections.IBluetooth;
 import com.example.carapp.ViewModels.carStateViewModel;
 
 public class CarSearch extends Fragment {
+    private final String TAG = "CarSearchFragment";
     private IBluetooth bluetoothLink;
     private ListView devicesList;
     private BluetoothViewModel viewModel;
@@ -67,6 +69,7 @@ public class CarSearch extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d(TAG, "onCreate executed!");
         // Initialize Bluetooth-related components
         viewModel = new ViewModelProvider(requireActivity()).get(BluetoothViewModel.class);
         carState= new ViewModelProvider(requireActivity()).get(carStateViewModel.class);
@@ -82,6 +85,7 @@ public class CarSearch extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d(TAG, "onCreateView executed!");
         View rootView = inflater.inflate(R.layout.fragment_carsearch, container, false);
         // Setup the button
         setupRQEnableBTButton(rootView);
@@ -97,6 +101,7 @@ public class CarSearch extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         setupUI(view);
         observeBluetoothData();
+        Log.d(TAG, "onViewCreated executed!");
         if (bluetoothLink.isBTEnabled()) {
             bluetoothLink.startScan(true); // Set isPairing to true as we want to scan for device{s
         } else {
@@ -109,16 +114,22 @@ public class CarSearch extends Fragment {
     @Override
     public void onStop() {
         super.onStop();
+        Log.d(TAG, "onStop executed!");
     viewModel.clearDiscoveredDevices();
     }
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-
+        Log.d(TAG, "onDestroyView executed!");
         // Reset the orientation to allow auto-rotation again
       getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        Log.d(TAG, "onResume executed!");
+    }
 
     private void setupUI(View view) {
         devicesList = view.findViewById(R.id.deviceList);

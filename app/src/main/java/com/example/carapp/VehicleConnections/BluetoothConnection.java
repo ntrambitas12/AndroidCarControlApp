@@ -244,8 +244,10 @@ public class BluetoothConnection implements IBluetooth, Serializable {
     public void receiveFromCar() {
         if (connectedPeripheral != null) {
             BluetoothGattService service = connectedPeripheral.getService(esp32ServiceUUID);
-            BluetoothGattCharacteristic readCharacteristic = service.getCharacteristic(esp32ReadCharacteristicUUID);
-            connectedPeripheral.readCharacteristic(readCharacteristic);
+            if (service != null) {
+                BluetoothGattCharacteristic readCharacteristic = service.getCharacteristic(esp32ReadCharacteristicUUID);
+                connectedPeripheral.readCharacteristic(readCharacteristic);
+            }
         }
     }
     public void requestBond() {
