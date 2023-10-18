@@ -70,6 +70,7 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (view.getId() == R.id.login) {
+                    // Get email and password text and call signIn method
                     String email = emailEditText.getText().toString();
                     String password = passwordEditText.getText().toString();
                     signIn(email, password);
@@ -82,7 +83,7 @@ public class LoginFragment extends Fragment {
         };
     }
 
-    public void signIn(String email, String password) {
+    private void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
