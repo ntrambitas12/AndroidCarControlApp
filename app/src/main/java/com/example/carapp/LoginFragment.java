@@ -11,8 +11,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,32 +23,29 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class LoginFragment extends Fragment {
 
-
-    private static final String ARG_PARAM1 = "CounterRef";
     private static final String TAG = "EmailPassword";
     private FirebaseAuth mAuth;
-
-    // Variable to store Counter ref
-    private Counter mParam1;
-
-    public LoginFragment() {
-        // Provide the XML layout of the fragment to base constructor here
-        super(R.layout.login_vertical);
-    }
-
+    private NavController navController;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
-        // if any arguments are passed, pull them out here
-        //System.out.println("Created fragment");
     }
 
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View rootView = inflater.inflate(R.layout.login_vertical, container, false);
+        return rootView;
+    }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        // Save the navController
+        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
 
         // Get the button and textview
         Button signUp = view.findViewById(R.id.SignUp);
@@ -58,12 +55,6 @@ public class LoginFragment extends Fragment {
         login.setOnClickListener(this.createListener());
     }
 
-    private void changeFragment(Fragment fragment) {
-        FragmentManager fm = getParentFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.fragmentContent, fragment);
-        transaction.commit();
-    }
 
     // Creates a listener that will increment the counter and update countDisplay onClick
     private View.OnClickListener createListener() {
@@ -77,8 +68,7 @@ public class LoginFragment extends Fragment {
                 }
                 else if (view.getId() == R.id.SignUp) {
                     //switch fragment to signup view
-                    Fragment signUp = new SignUpFragment();
-                    changeFragment(signUp);
+                    navController.navigate(R.id.signUpFragment);
                 }
             }
         };

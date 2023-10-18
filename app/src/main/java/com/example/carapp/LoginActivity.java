@@ -8,9 +8,8 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
-import androidx.fragment.app.FragmentTransaction;
+import androidx.navigation.NavController;
+import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -23,6 +22,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private static final String TAG = "EmailPassword";
     private FirebaseAuth mAuth;
+    private NavController navController;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -31,19 +31,16 @@ public class LoginActivity extends AppCompatActivity {
 
         mAuth = FirebaseAuth.getInstance();
 
-        Fragment login = new LoginFragment();
-
-        this.changeFragment(login);
     }
 
-    private void changeFragment(Fragment fragment) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction transaction = fm.beginTransaction();
-        transaction.replace(R.id.fragmentContent, fragment);
-        transaction.commit();
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Get a reference to the navController and navigate user to the loginFragment
+        navController = Navigation.findNavController(this, R.id.nav_host_fragment);
     }
 
-//    public void onStart() {
+    //    public void onStart() {
 //        super.onStart();
 //        // Check if user is signed in (non-null) and update UI accordingly and update UI accordingly
 //        FirebaseUser currentUser = mAuth.getCurrentUser();

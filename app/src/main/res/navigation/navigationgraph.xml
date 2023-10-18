@@ -3,28 +3,21 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigationgraph"
-    app:startDestination="@id/firstFragment">
-
+    app:startDestination="@id/loginFragment">
     <fragment
-        android:id="@+id/firstFragment"
-        android:name="com.example.carapp.FirstFragment"
-        android:label="fragment_first"
-        tools:layout="@layout/fragment_first" >
+        android:id="@+id/loginFragment"
+        android:name="com.example.carapp.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
     </fragment>
-
     <fragment
-        android:id="@+id/secondFragment"
-        android:name="com.example.carapp.SecondFragment"
-        android:label="fragment_second"
-        tools:layout="@layout/fragment_second" >
+        android:id="@+id/signUpFragment"
+        android:name="com.example.carapp.SignUpFragment"
+        android:label="SignUpFragment" >
+        <action
+            android:id="@+id/action_signUpFragment_to_loginFragment"
+            app:destination="@id/loginFragment" />
     </fragment>
-
-    <action
-        android:id="@+id/action_firstFragment_to_secondFragment"
-        app:destination="@id/secondFragment" />
-
-    <action
-        android:id="@+id/action_secondFragment_to_firstFragment"
-        app:destination="@id/firstFragment" />
-
 </navigation>
