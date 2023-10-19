@@ -5,18 +5,28 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="412dp"
+        android:layout_height="184dp"
+        android:layout_marginTop="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@mipmap/ic_banner_foreground" />
+
     <TextView
         android:id="@+id/textView2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginTop="36dp"
         android:text="SignUp"
         android:textAlignment="center"
         android:textSize="60sp"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.0" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView" />
 
     <Button
         android:id="@+id/createAccount"
@@ -25,8 +35,8 @@
         android:layout_marginTop="32dp"
         android:text="Create Account"
         app:layout_constraintEnd_toStartOf="@+id/SignIn"
-        app:layout_constraintStart_toStartOf="@+id/Password"
-        app:layout_constraintTop_toBottomOf="@+id/Password" />
+        app:layout_constraintStart_toStartOf="@+id/passwordSignup"
+        app:layout_constraintTop_toBottomOf="@+id/passwordSignup" />
 
     <Button
         android:id="@+id/SignIn"
@@ -34,9 +44,9 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
         android:text="Sign In"
-        app:layout_constraintEnd_toEndOf="@+id/Password"
+        app:layout_constraintEnd_toEndOf="@+id/passwordSignup"
         app:layout_constraintStart_toEndOf="@+id/createAccount"
-        app:layout_constraintTop_toBottomOf="@+id/Password" />
+        app:layout_constraintTop_toBottomOf="@+id/passwordSignup" />
 
     <EditText
         android:id="@+id/emailSignup"
@@ -53,7 +63,7 @@
         app:layout_constraintTop_toBottomOf="@+id/name" />
 
     <EditText
-        android:id="@+id/Password"
+        android:id="@+id/passwordSignup"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="32dp"

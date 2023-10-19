@@ -13,26 +13,34 @@
         tools:layout="@layout/fragment_request_permissions" >
         <action
             android:id="@+id/action_requestPermissions2_to_loginFragment2"
-            app:destination="@id/loginFragment2" />
+            app:destination="@id/loginFragment" />
     </fragment>
     <fragment
-        android:id="@+id/loginFragment2"
+        android:id="@+id/loginFragment"
         android:name="com.example.carapp.Fragments.LoginFragment"
         android:label="LoginFragment" >
         <action
-            android:id="@+id/action_loginFragment2_to_signUpFragment2"
-            app:destination="@id/signUpFragment2" />
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+        <action
+            android:id="@+id/action_loginFragment_to_dashboardFragment"
+            app:destination="@id/dashboardFragment" />
+
         <action
             android:id="@+id/action_loginFragment2_to_carSearch"
             app:destination="@id/carSearch" />
+
     </fragment>
     <fragment
-        android:id="@+id/signUpFragment2"
+        android:id="@+id/signUpFragment"
         android:name="com.example.carapp.Fragments.SignUpFragment"
         android:label="SignUpFragment" >
         <action
             android:id="@+id/action_signUpFragment2_to_loginFragment2"
-            app:destination="@id/loginFragment2" />
+            app:destination="@id/loginFragment" />
+        <action
+            android:id="@+id/action_signUpFragment_to_carSearch"
+            app:destination="@id/carSearch" />
     </fragment>
     <fragment
         android:id="@+id/carSearch"
@@ -51,5 +59,12 @@
         <action
             android:id="@+id/action_confirmCarSelection_to_carSearch"
             app:destination="@id/carSearch" />
+        <action
+            android:id="@+id/action_confirmCarSelection_to_dashboardFragment"
+            app:destination="@id/dashboardFragment" />
     </fragment>
+    <fragment
+        android:id="@+id/dashboardFragment"
+        android:name="com.example.carapp.Fragments.DashboardFragment"
+        android:label="DashboardFragment" />
 </navigation>

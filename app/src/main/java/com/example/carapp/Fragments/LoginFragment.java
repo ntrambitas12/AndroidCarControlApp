@@ -6,6 +6,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -28,6 +30,8 @@ public class LoginFragment extends Fragment {
     private static final String TAG = "EmailPassword";
     private FirebaseAuth mAuth;
     private NavController navController;
+    private EditText emailEditText;
+    private EditText passwordEditText;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -55,6 +59,10 @@ public class LoginFragment extends Fragment {
 
         signUp.setOnClickListener(this.createListener());
         login.setOnClickListener(this.createListener());
+
+        // Get username & password text views
+        emailEditText = view.findViewById(R.id.email);
+        passwordEditText = view.findViewById(R.id.password);
     }
 
 
@@ -64,23 +72,21 @@ public class LoginFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 if (view.getId() == R.id.login) {
-                    //call script to check if login details are a user within the database
-                    //and go to main app view
-                    // Get email and password text & call signIn method
-                    // TODO: Replace with correct action
-                    NavDirections actionCarSearch = LoginFragmentDirections.actionLoginFragment2ToCarSearch();
-                    navController.navigate(actionCarSearch);
+                    // Get email and password text and call signIn method
+                    String email = emailEditText.getText().toString();
+                    String password = passwordEditText.getText().toString();
+                    signIn(email, password);
                 }
                 else if (view.getId() == R.id.SignUp) {
                     //switch fragment to signup view
-                    NavDirections actionGoToSignUp = LoginFragmentDirections.actionLoginFragment2ToSignUpFragment2();
+                    NavDirections actionGoToSignUp = LoginFragmentDirections.actionLoginFragmentToSignUpFragment();
                     navController.navigate(actionGoToSignUp);
                 }
             }
         };
     }
 
-    public void signIn(String email, String password) {
+    private void signIn(String email, String password) {
         mAuth.signInWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -88,6 +94,9 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            // TODO: FIGURE OUT CORRECT NAVIGATION PATH TO TAKE DEPENDING ON IF USER HAS A CAR SAVED IN PROFILE OR NOT
+                            NavDirections actionGoToDashboard = LoginFragmentDirections.actionLoginFragmentToDashboardFragment();
+                            navController.navigate(actionGoToDashboard);
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed", Toast.LENGTH_SHORT).show();

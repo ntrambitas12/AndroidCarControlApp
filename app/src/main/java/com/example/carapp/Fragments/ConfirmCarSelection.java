@@ -78,11 +78,11 @@ private ConnectionManager connectionManager;
         // Set up yes button to confirm VIN
         Button VINAccepted = rootView.findViewById(R.id.confirm_BT_yes);
         VINAccepted.setOnClickListener(click -> {
-            //TODO: SET NAVIGATION ONCE DEVICE IS CONFIRMED
-            //NavDirections actionDeviceConfirmed = ConfirmCarSelectionDirections.actionConfirmCarSelectionToBTConnected();
+            //TODO: SAVE DATA TO FIREBASE
+            NavDirections actionDeviceConfirmed = ConfirmCarSelectionDirections.actionConfirmCarSelectionToDashboardFragment();
             // Request to bond device once user confirms
            connectionManager.getBluetoothLink().requestBond();
-            //Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionDeviceConfirmed);
+            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionDeviceConfirmed);
         });
 
         // Set up no button to decline VIN
