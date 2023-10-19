@@ -12,10 +12,12 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -32,12 +34,14 @@ public class SignUpFragment extends Fragment {
     private FirebaseAuth mAuth;
     private EditText emailEditText;
     private EditText passwordEditText;
+    private FirebaseManager firebaseManager;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        firebaseManager = new ViewModelProvider(requireActivity()).get(FirebaseManager.class);
     }
 
     @Nullable
@@ -94,6 +98,10 @@ public class SignUpFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            firebaseManager.initialize(user);
+                            // TODO: Call method to get list of users cars
+                            // If list is empty route to pairing screen
+                            // If list is populated route to dashboard
                             // Once a new user is created, take them to the screen to pair their car
                             NavDirections actionGoToPairing = SignUpFragmentDirections.actionSignUpFragmentToCarSearch();
                             navController.navigate(actionGoToPairing);

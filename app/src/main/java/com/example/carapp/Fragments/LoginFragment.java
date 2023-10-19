@@ -13,11 +13,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.example.carapp.R;
+import com.example.carapp.VehicleConnections.ConnectionManager;
+import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -32,11 +35,13 @@ public class LoginFragment extends Fragment {
     private NavController navController;
     private EditText emailEditText;
     private EditText passwordEditText;
+    private FirebaseManager firebaseManager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        firebaseManager = new ViewModelProvider(requireActivity()).get(FirebaseManager.class);
     }
 
     @Nullable
@@ -94,6 +99,10 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
+                            firebaseManager.initialize(user);
+                            // TODO: Call method to get list of users cars
+                            // If list is empty route to pairing screen
+                            // If list is populated route to dashboard
                             // TODO: FIGURE OUT CORRECT NAVIGATION PATH TO TAKE DEPENDING ON IF USER HAS A CAR SAVED IN PROFILE OR NOT
                             NavDirections actionGoToDashboard = LoginFragmentDirections.actionLoginFragmentToDashboardFragment();
                             navController.navigate(actionGoToDashboard);
