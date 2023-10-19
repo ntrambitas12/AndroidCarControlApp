@@ -1,4 +1,4 @@
-package com.example.carapp;
+package com.example.carapp.Fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -14,8 +14,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import com.example.carapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -77,7 +79,8 @@ public class LoginFragment extends Fragment {
                 }
                 else if (view.getId() == R.id.SignUp) {
                     //switch fragment to signup view
-                    navController.navigate(R.id.signUpFragment);
+                    NavDirections actionGoToSignUp = LoginFragmentDirections.actionLoginFragmentToSignUpFragment();
+                    navController.navigate(actionGoToSignUp);
                 }
             }
         };
@@ -91,7 +94,9 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            navController.navigate(R.id.dashboardFragment);
+                            // TODO: FIGURE OUT CORRECT NAVIGATION PATH TO TAKE DEPENDING ON IF USER HAS A CAR SAVED IN PROFILE OR NOT
+                            NavDirections actionGoToDashboard = LoginFragmentDirections.actionLoginFragmentToDashboardFragment();
+                            navController.navigate(actionGoToDashboard);
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed", Toast.LENGTH_SHORT).show();

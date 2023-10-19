@@ -1,4 +1,4 @@
-package com.example.carapp;
+package com.example.carapp.Fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -20,6 +21,8 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.example.carapp.R;
+
 
 
 public class SignUpFragment extends Fragment {
@@ -75,7 +78,8 @@ public class SignUpFragment extends Fragment {
                 }
                 else if (view.getId() == R.id.SignIn) {
                     //switch fragment to signup view
-                    navController.navigate(R.id.loginFragment);
+                    NavDirections actionGoToLogin = SignUpFragmentDirections.actionSignUpFragment2ToLoginFragment2();
+                    navController.navigate(actionGoToLogin);
                 }
             }
         };
@@ -90,11 +94,13 @@ public class SignUpFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            navController.navigate(R.id.loginFragment);
+                            // Once a new user is created, take them to the screen to pair their car
+                            NavDirections actionGoToPairing = SignUpFragmentDirections.actionSignUpFragmentToCarSearch();
+                            navController.navigate(actionGoToPairing);
                         } else {
-                            // If sign in fails, display a message to the user.
+                            // If create account fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getActivity(), "Authentication failed.",
+                            Toast.makeText(getActivity(), "Account creation failed.",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
