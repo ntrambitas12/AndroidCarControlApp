@@ -1,4 +1,4 @@
-package com.example.carapp;
+package com.example.carapp.Fragments;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -12,8 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import com.example.carapp.R;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -65,10 +67,14 @@ public class LoginFragment extends Fragment {
                     //call script to check if login details are a user within the database
                     //and go to main app view
                     // Get email and password text & call signIn method
+                    // TODO: Replace with correct action
+                    NavDirections actionCarSearch = LoginFragmentDirections.actionLoginFragment2ToCarSearch();
+                    navController.navigate(actionCarSearch);
                 }
                 else if (view.getId() == R.id.SignUp) {
                     //switch fragment to signup view
-                    navController.navigate(R.id.signUpFragment);
+                    NavDirections actionGoToSignUp = LoginFragmentDirections.actionLoginFragment2ToSignUpFragment2();
+                    navController.navigate(actionGoToSignUp);
                 }
             }
         };

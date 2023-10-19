@@ -4,5 +4,6 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="increment_button_label">Increment Counter</string>
     <string name="decrement_button_label">Decrement Counter</string>
+    <string name="bluetooth_not_supported">Bluetooth is not supported on this device!</string>
 
 </resources>

@@ -3,21 +3,53 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/navigationgraph"
-    app:startDestination="@id/loginFragment">
+    app:startDestination="@id/requestPermissions2">
+
+
     <fragment
-        android:id="@+id/loginFragment"
-        android:name="com.example.carapp.LoginFragment"
-        android:label="LoginFragment" >
+        android:id="@+id/requestPermissions2"
+        android:name="com.example.carapp.Fragments.RequestPermissions"
+        android:label="fragment_request_permissions"
+        tools:layout="@layout/fragment_request_permissions" >
         <action
-            android:id="@+id/action_loginFragment_to_signUpFragment"
-            app:destination="@id/signUpFragment" />
+            android:id="@+id/action_requestPermissions2_to_loginFragment2"
+            app:destination="@id/loginFragment2" />
     </fragment>
     <fragment
-        android:id="@+id/signUpFragment"
-        android:name="com.example.carapp.SignUpFragment"
+        android:id="@+id/loginFragment2"
+        android:name="com.example.carapp.Fragments.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment2_to_signUpFragment2"
+            app:destination="@id/signUpFragment2" />
+        <action
+            android:id="@+id/action_loginFragment2_to_carSearch"
+            app:destination="@id/carSearch" />
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment2"
+        android:name="com.example.carapp.Fragments.SignUpFragment"
         android:label="SignUpFragment" >
         <action
-            android:id="@+id/action_signUpFragment_to_loginFragment"
-            app:destination="@id/loginFragment" />
+            android:id="@+id/action_signUpFragment2_to_loginFragment2"
+            app:destination="@id/loginFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/carSearch"
+        android:name="com.example.carapp.Fragments.CarSearch"
+        android:label="bluetooth_search"
+        tools:layout="@layout/bluetooth_search" >
+        <action
+            android:id="@+id/action_carSearch_to_confirmCarSelection"
+            app:destination="@id/confirmCarSelection" />
+    </fragment>
+    <fragment
+        android:id="@+id/confirmCarSelection"
+        android:name="com.example.carapp.Fragments.ConfirmCarSelection"
+        android:label="bluetooth_confirm_car_selection"
+        tools:layout="@layout/bluetooth_confirm_car_selection" >
+        <action
+            android:id="@+id/action_confirmCarSelection_to_carSearch"
+            app:destination="@id/carSearch" />
     </fragment>
 </navigation>

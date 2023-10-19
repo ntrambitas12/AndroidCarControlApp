@@ -1,4 +1,4 @@
-package com.example.carapp;
+package com.example.carapp.Fragments;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+
+import com.example.carapp.R;
 
 
 public class SignUpFragment extends Fragment {
@@ -59,7 +62,8 @@ public class SignUpFragment extends Fragment {
                 }
                 else if (view.getId() == R.id.SignIn) {
                     //switch fragment to signup view
-                    navController.navigate(R.id.loginFragment);
+                    NavDirections actionGoToLogin = SignUpFragmentDirections.actionSignUpFragment2ToLoginFragment2();
+                    navController.navigate(actionGoToLogin);
                 }
             }
         };
