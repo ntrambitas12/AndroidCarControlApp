@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigationgraph"
+    app:startDestination="@id/requestPermissions2">
+
+
+    <fragment
+        android:id="@+id/requestPermissions2"
+        android:name="com.example.carapp.Fragments.RequestPermissions"
+        android:label="fragment_request_permissions"
+        tools:layout="@layout/fragment_request_permissions" >
+        <action
+            android:id="@+id/action_requestPermissions2_to_loginFragment2"
+            app:destination="@id/loginFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.carapp.Fragments.LoginFragment"
+        android:label="LoginFragment" >
+        <action
+            android:id="@+id/action_loginFragment_to_signUpFragment"
+            app:destination="@id/signUpFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.example.carapp.Fragments.SignUpFragment"
+        android:label="SignUpFragment" >
+        <action
+            android:id="@+id/action_signUpFragment2_to_loginFragment2"
+            app:destination="@id/loginFragment" />
+    </fragment>
+</navigation>

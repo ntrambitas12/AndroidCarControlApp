@@ -1,5 +1,6 @@
 package com.example.carapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import com.example.carapp.DashBoardActivity;
+import com.example.carapp.LoginActivity;
 import com.example.carapp.R;
 import com.example.carapp.VehicleConnections.ConnectionManager;
 import com.example.carapp.ViewModels.FirebaseManager;

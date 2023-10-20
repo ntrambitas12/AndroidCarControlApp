@@ -13,7 +13,7 @@ import androidx.navigation.Navigation;
 
 import com.example.carapp.R;
 
-public class DashboardFragment extends Fragment {
+public class CarDashboardFragment extends Fragment {
 
     private NavController navController;
 
@@ -25,7 +25,7 @@ public class DashboardFragment extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.dashboard, container, false);
+        View rootView = inflater.inflate(R.layout.dashboard_with_car, container, false);
         return rootView;
     }
 
@@ -34,7 +34,7 @@ public class DashboardFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         // Get navigation controller
-        navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
+        navController = Navigation.findNavController(requireActivity(), R.id.Nav_Dashboard);
     }
 
 }

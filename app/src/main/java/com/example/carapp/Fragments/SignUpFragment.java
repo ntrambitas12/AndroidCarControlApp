@@ -1,5 +1,6 @@
 package com.example.carapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import com.example.carapp.DashBoardActivity;
+import com.example.carapp.LoginActivity;
 import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -102,8 +105,9 @@ public class SignUpFragment extends Fragment {
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             firebaseManager.createNewProfile(name, user.getUid());
-                            NavDirections actionGoToPairing = SignUpFragmentDirections.actionSignUpFragmentToCarSearch();
-                            navController.navigate(actionGoToPairing);
+                            //NavDirections actionGoToPairing = SignUpFragmentDirections.actionSignUpFragmentToCarSearch();
+                            //navController.navigate(actionGoToPairing);
+                            startActivity(new Intent(getActivity(), DashBoardActivity.class));
                         } else {
                             // If create account fails, display a message to the user.
                             Log.w(TAG, "createUserWithEmail:failure", task.getException());
