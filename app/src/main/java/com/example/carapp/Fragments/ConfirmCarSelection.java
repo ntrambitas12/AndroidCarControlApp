@@ -18,11 +18,15 @@ import android.widget.ViewFlipper;
 import com.example.carapp.R;
 import com.example.carapp.VehicleConnections.ConnectionManager;
 import com.example.carapp.ViewModels.BluetoothSearchViewModel;
+import com.example.carapp.ViewModels.FirebaseManager;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class ConfirmCarSelection extends Fragment {
 
 private ViewFlipper viewFlipper;
 private BluetoothSearchViewModel viewModel;
+private FirebaseManager firebaseManager;
 private TextView VINDisplay;
 private ConnectionManager connectionManager;
 
@@ -35,6 +39,7 @@ private ConnectionManager connectionManager;
         super.onCreate(savedInstanceState);
         viewModel = new ViewModelProvider(requireActivity()).get(BluetoothSearchViewModel.class);
         connectionManager = new ViewModelProvider(requireActivity()).get(ConnectionManager.class);
+        firebaseManager = new ViewModelProvider(requireActivity()).get(FirebaseManager.class);
 
     }
 
@@ -78,12 +83,25 @@ private ConnectionManager connectionManager;
         // Set up yes button to confirm VIN
         Button VINAccepted = rootView.findViewById(R.id.confirm_BT_yes);
         VINAccepted.setOnClickListener(click -> {
-            //TODO: SAVE DATA TO FIREBASE
-            NavDirections actionDeviceConfirmed = ConfirmCarSelectionDirections.actionConfirmCarSelectionToDashboardFragment();
-            // Request to bond device once user confirms
-           connectionManager.getBluetoothLink().requestBond();
-            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionDeviceConfirmed);
-        });
+            FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+
+            if (user != null ) {
+                String VIN = viewModel.VINLiveData.getValue();
+                String uid = user.getUid();
+                String BTMacAddr = connectionManager.getBluetoothLink().getConnectedDeviceUUID();
+                //TODO: Add flow to get nickname and color
+                String nickname = "TEST";
+                String color = "#1234abc";
+                firebaseManager.addNewCar(uid,BTMacAddr, nickname,VIN,color);
+                NavDirections actionDeviceConfirmed = ConfirmCarSelectionDirections.actionConfirmCarSelectionToDashboardFragment();
+                // Request to bond device once user confirms
+                connectionManager.getBluetoothLink().requestBond();
+                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionDeviceConfirmed);
+            } else {
+                // Error has occured
+                //TODO: handle this case here
+            }
+        } );
 
         // Set up no button to decline VIN
         Button VINDeclined = rootView.findViewById(R.id.confirm_BT_no);

@@ -252,6 +252,15 @@ public class BluetoothConnection implements IBluetooth, Serializable {
             connectedPeripheral.createBond();
         }
     }
+
+    @Override
+    public String getConnectedDeviceUUID() {
+        if (connectedPeripheral != null) {
+            return connectedPeripheral.getAddress();
+        } else {
+            return "NO_MAC_ERR";
+        }
+    }
 }
 
 

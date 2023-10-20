@@ -11,4 +11,5 @@ public interface IBluetooth extends IConnection {
       boolean isBTEnabled();
       boolean isConnected();
       void requestBond();
+      String getConnectedDeviceUUID();
 }

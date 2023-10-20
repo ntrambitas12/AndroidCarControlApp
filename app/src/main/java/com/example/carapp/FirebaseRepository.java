@@ -9,6 +9,7 @@ import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.GenericTypeIndicator;
 import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
@@ -28,9 +29,6 @@ public class FirebaseRepository {
         userData.put("name", fullName);
         userData.put("defaultCar", 0); // Initially, set the default car to 0
 
-        // Initialize an arrayList that will hold an array of a user's cars
-        ArrayList<HashMap<String, Object>> usersCars = new ArrayList<>();
-        userData.put("cars", usersCars);
 
         // Add any additional data to store within a user's profile here
 
@@ -42,7 +40,12 @@ public class FirebaseRepository {
     public void addNewCar(String uid, String BTMacAddress, String Nickname, String VIN, String Color) {
         // Fetch the user's profile
         HashMap<String, Object> userData = getUserData(uid);
-        ArrayList<HashMap<String, Object>> usersCars = (ArrayList<HashMap<String, Object>>) userData.get("cars");
+        ArrayList<HashMap<String, Object>> usersCars;
+        if (userData.containsKey("cars")) {
+            usersCars = (ArrayList<HashMap<String, Object>>) userData.get("cars");
+        }  else {
+            usersCars = new ArrayList<>();
+        }
 
         // Create a new Car Object
         HashMap<String, Object> car = new HashMap<>();
@@ -58,6 +61,11 @@ public class FirebaseRepository {
         int addedCarIdx = usersCars.size() - 1;
         userData.replace("defaultCar", addedCarIdx);
 
+        //Add the arrayList reference to the hashMap if it doesn't exist
+        if (!userData.containsKey("cars")) {
+            userData.put("cars", usersCars);
+        }
+
         // Write the updates back to Firebase
         database.child("users").child(uid).setValue(userData);
     }
@@ -70,7 +78,8 @@ public class FirebaseRepository {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    profile = snapshot.getValue(HashMap.class);
+                    GenericTypeIndicator<HashMap<String, Object>> T = new GenericTypeIndicator<HashMap<String, Object>>() {};
+                    profile = snapshot.getValue(T);
                 }
             }
 
