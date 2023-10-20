@@ -1,5 +1,6 @@
 package com.example.carapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -18,6 +19,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import com.example.carapp.DashBoardActivity;
+import com.example.carapp.LoginActivity;
 import com.example.carapp.R;
 import com.example.carapp.VehicleConnections.ConnectionManager;
 import com.example.carapp.ViewModels.FirebaseManager;
@@ -102,13 +105,13 @@ public class LoginFragment extends Fragment {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
                             firebaseManager.getUserProfile(user.getUid());
-                            if (firebaseManager.userHasCars()) {
-                                NavDirections actionGoToDashboard = LoginFragmentDirections.actionLoginFragmentToDashboardFragment();
-                                navController.navigate(actionGoToDashboard);
-                            } else {
-                                NavDirections actionGoToCarSearch = LoginFragmentDirections.actionLoginFragment2ToCarSearch();
-                                navController.navigate(actionGoToCarSearch);
-                            }
+//                            if (firebaseManager.userHasCars()) {
+//                                NavDirections actionGoToDashboard = LoginFragmentDirections.actionLoginFragmentToDashboardFragment();
+//                                navController.navigate(actionGoToDashboard);
+//                            } else {
+//                                NavDirections actionGoToCarSearch = LoginFragmentDirections.actionLoginFragment2ToCarSearch();
+//                                navController.navigate(actionGoToCarSearch);
+                            //}
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed", Toast.LENGTH_SHORT).show();
