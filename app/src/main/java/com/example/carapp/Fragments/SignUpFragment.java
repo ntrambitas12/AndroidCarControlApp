@@ -34,6 +34,7 @@ public class SignUpFragment extends Fragment {
     private FirebaseAuth mAuth;
     private EditText emailEditText;
     private EditText passwordEditText;
+    private EditText nameEditText;
     private FirebaseManager firebaseManager;
 
 
@@ -68,6 +69,7 @@ public class SignUpFragment extends Fragment {
         // Get username & password text views
         emailEditText = view.findViewById(R.id.emailSignup);
         passwordEditText = view.findViewById(R.id.passwordSignup);
+        nameEditText = view.findViewById(R.id.name);
     }
 
     // Creates a listener that will increment the counter and update countDisplay onClick
@@ -78,7 +80,8 @@ public class SignUpFragment extends Fragment {
                 if (view.getId() == R.id.createAccount) {
                     String email = emailEditText.getText().toString();
                     String password = passwordEditText.getText().toString();
-                    createAccount(email, password);
+                    String name = nameEditText.getText().toString();
+                    createAccount(email, password, name);
                 }
                 else if (view.getId() == R.id.SignIn) {
                     //switch fragment to signup view
@@ -89,7 +92,7 @@ public class SignUpFragment extends Fragment {
         };
     }
 
-    private void createAccount(String email, String password) {
+    private void createAccount(String email, String password, String name) {
         mAuth.createUserWithEmailAndPassword(email, password)
                 .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
                     @Override
@@ -98,11 +101,7 @@ public class SignUpFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            firebaseManager.createNewProfile("", user.getUid());
-                            // TODO: Call method to get list of users cars
-                            // If list is empty route to pairing screen
-                            // If list is populated route to dashboard
-                            // Once a new user is created, take them to the screen to pair their car
+                            firebaseManager.createNewProfile(name, user.getUid());
                             NavDirections actionGoToPairing = SignUpFragmentDirections.actionSignUpFragmentToCarSearch();
                             navController.navigate(actionGoToPairing);
                         } else {

@@ -53,6 +53,10 @@ public class FirebaseManager extends ViewModel {
 
     public boolean userHasCars() {
         HashMap<String, Object> data = userData.getValue();
+        // Checking for null because uid passed in may not yet exist in our db
+        if (data == null) {
+            return false;
+        }
         ArrayList<HashMap<String, Object>> cars = (ArrayList<HashMap<String, Object>>) data.get("cars");
         return cars.size() > 0;
     }

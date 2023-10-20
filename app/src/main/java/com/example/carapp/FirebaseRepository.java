@@ -19,8 +19,8 @@ public class FirebaseRepository {
     private DatabaseReference database = databaseSettings.getReference();
     private HashMap<String, Object> profile;
     public FirebaseRepository() {
-        databaseSettings.setPersistenceEnabled(true);
-        databaseSettings.setPersistenceCacheSizeBytes(100*1024*1024); // Set the cache for 100mbs
+//        databaseSettings.setPersistenceEnabled(true);
+//        databaseSettings.setPersistenceCacheSizeBytes(100*1024*1024); // Set the cache for 100mbs
     }
 
     public void createNewUser(String fullName, String uid) {
