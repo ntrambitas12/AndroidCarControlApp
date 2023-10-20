@@ -98,7 +98,7 @@ public class SignUpFragment extends Fragment {
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            firebaseManager.initialize(user);
+                            firebaseManager.createNewProfile("", user.getUid());
                             // TODO: Call method to get list of users cars
                             // If list is empty route to pairing screen
                             // If list is populated route to dashboard

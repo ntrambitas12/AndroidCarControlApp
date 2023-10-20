@@ -1,6 +1,7 @@
 package com.example.carapp.ViewModels;
 
 import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
 import com.example.carapp.FirebaseRepository;
@@ -10,11 +11,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 public class FirebaseManager extends ViewModel {
-
-
     private FirebaseRepository repository;
+    private MutableLiveData<HashMap<String, Object>> userData;
     public FirebaseManager() {
         repository = new FirebaseRepository(); // Initialize class that performs CRUD operations to firebase
+        userData = new MutableLiveData<>();
     }
 
     public void createNewProfile(String fullName, String uid) {
@@ -46,8 +47,18 @@ public class FirebaseManager extends ViewModel {
 
     /* UI will observe this method. Whenever anything changes in Firebase,
     this method will automatically be fired by the firebaseRepository class and it will update the UI*/
-    public LiveData<HashMap<String, Object>> getUserProfile(String uid) {
-        return repository.getUserData(uid);
+    public void getUserProfile(String uid) {
+        userData.postValue(repository.getUserData(uid));
+    }
+
+    public boolean userHasCars() {
+        HashMap<String, Object> data = userData.getValue();
+        ArrayList<HashMap<String, Object>> cars = (ArrayList<HashMap<String, Object>>) data.get("cars");
+        return cars.size() > 0;
+    }
+
+    public LiveData<HashMap<String, Object>> getUserData() {
+        return userData;
     }
 
 }

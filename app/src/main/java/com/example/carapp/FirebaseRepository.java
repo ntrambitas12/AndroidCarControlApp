@@ -17,6 +17,7 @@ import java.util.HashMap;
 public class FirebaseRepository {
     private FirebaseDatabase databaseSettings = FirebaseDatabase.getInstance();
     private DatabaseReference database = databaseSettings.getReference();
+    private HashMap<String, Object> profile;
     public FirebaseRepository() {
         databaseSettings.setPersistenceEnabled(true);
         databaseSettings.setPersistenceCacheSizeBytes(100*1024*1024); // Set the cache for 100mbs
@@ -40,7 +41,7 @@ public class FirebaseRepository {
 
     public void addNewCar(String uid, String BTMacAddress, String Nickname, String VIN, String Color) {
         // Fetch the user's profile
-        HashMap<String, Object> userData = getUserData(uid).getValue();
+        HashMap<String, Object> userData = getUserData(uid);
         ArrayList<HashMap<String, Object>> usersCars = (ArrayList<HashMap<String, Object>>) userData.get("cars");
 
         // Create a new Car Object
@@ -62,22 +63,21 @@ public class FirebaseRepository {
     }
 
     // Retrieves the entire profile from Firebase. This will automatically get called upon updates
-    public LiveData<HashMap<String, Object> > getUserData(String uid) {
-        final MutableLiveData<HashMap<String, Object> > profile = new MutableLiveData<>();
+    public HashMap<String, Object> getUserData(String uid) {
+//        HashMap<String, Object> profile;
         database.child("users").child(uid).addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
                 if (snapshot.exists()) {
-                    HashMap<String, Object> profileData = snapshot.getValue(HashMap.class);
-                    profile.setValue(profileData);
+                    profile = snapshot.getValue(HashMap.class);
                 }
             }
 
             @Override
             public void onCancelled(@NonNull DatabaseError error) {
                 // Error has occurred, set an empty hashmap
-                profile.setValue(new HashMap<>());
+                profile = new HashMap<>();
             }
         });
         return profile;
@@ -97,7 +97,7 @@ public class FirebaseRepository {
     // Updates the car that the user has currently selected in their profile
     public void updateCurrentlySelectedCar(String uid, int carID) {
         // Fetch the user's profile
-        HashMap<String, Object> userData = getUserData(uid).getValue();
+        HashMap<String, Object> userData = getUserData(uid);
         userData.replace("defaultCar", carID);
         // Write update
         database.child("users").child(uid).setValue(userData);
@@ -110,7 +110,7 @@ public class FirebaseRepository {
     //Updates a user's profile in Firebase
     public void updateUserData(String uid, String name) {
         // Fetch the user's profile
-        HashMap<String, Object> userData = getUserData(uid).getValue();
+        HashMap<String, Object> userData = getUserData(uid);
         userData.replace("name", name);
 
         // Write update

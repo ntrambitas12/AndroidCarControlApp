@@ -27,6 +27,8 @@ import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import java.util.HashMap;
+
 
 public class LoginFragment extends Fragment {
 
@@ -99,13 +101,14 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            firebaseManager.initialize(user);
-                            // TODO: Call method to get list of users cars
-                            // If list is empty route to pairing screen
-                            // If list is populated route to dashboard
-                            // TODO: FIGURE OUT CORRECT NAVIGATION PATH TO TAKE DEPENDING ON IF USER HAS A CAR SAVED IN PROFILE OR NOT
-                            NavDirections actionGoToDashboard = LoginFragmentDirections.actionLoginFragmentToDashboardFragment();
-                            navController.navigate(actionGoToDashboard);
+                            firebaseManager.getUserProfile(user.getUid());
+                            if (firebaseManager.userHasCars()) {
+                                NavDirections actionGoToDashboard = LoginFragmentDirections.actionLoginFragmentToDashboardFragment();
+                                navController.navigate(actionGoToDashboard);
+                            } else {
+                                NavDirections actionGoToCarSearch = LoginFragmentDirections.actionLoginFragment2ToCarSearch();
+                                navController.navigate(actionGoToCarSearch);
+                            }
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed", Toast.LENGTH_SHORT).show();
