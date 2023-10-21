@@ -12,10 +12,9 @@ import java.util.HashMap;
 
 public class FirebaseManager extends ViewModel {
     private FirebaseRepository repository;
-    private MutableLiveData<HashMap<String, Object>> userData;
+    private LiveData<HashMap<String, Object>> userData;
     public FirebaseManager() {
         repository = new FirebaseRepository(); // Initialize class that performs CRUD operations to firebase
-        userData = new MutableLiveData<>();
     }
 
     public void createNewProfile(String fullName, String uid) {
@@ -45,24 +44,17 @@ public class FirebaseManager extends ViewModel {
         repository.updateUserData(uid, name);
     }
 
-    /* UI will observe this method. Whenever anything changes in Firebase,
-    this method will automatically be fired by the firebaseRepository class and it will update the UI*/
-    public void getUserProfile(String uid) {
-        userData.postValue(repository.getUserData(uid));
+    // Call once upon initially loading a user's profile.
+    public void loadProfile(String uid) {
+
+        userData = repository.getUserData(uid);
     }
 
-    public boolean userHasCars() {
-        HashMap<String, Object> data = userData.getValue();
-        // Checking for null because uid passed in may not yet exist in our db
-        if (data == null) {
-            return false;
-        }
-        ArrayList<HashMap<String, Object>> cars = (ArrayList<HashMap<String, Object>>) data.get("cars");
-        return cars.size() > 0;
-    }
 
     public LiveData<HashMap<String, Object>> getUserData() {
-        return userData;
+        return userData; /* Returns a reference to liveData.
+        When Fragment observes this liveData reference, t
+        he completed callback within the repository fires and automatically notifies UI*/
     }
 
 }

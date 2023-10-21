@@ -13,6 +13,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
@@ -101,14 +102,20 @@ public class LoginFragment extends Fragment {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
                             FirebaseUser user = mAuth.getCurrentUser();
-                            firebaseManager.getUserProfile(user.getUid());
-                            if (firebaseManager.userHasCars()) {
-                                NavDirections actionGoToDashboard = LoginFragmentDirections.actionLoginFragmentToDashboardFragment();
-                                navController.navigate(actionGoToDashboard);
-                            } else {
-                                NavDirections actionGoToCarSearch = LoginFragmentDirections.actionLoginFragment2ToCarSearch();
-                                navController.navigate(actionGoToCarSearch);
-                            }
+                            firebaseManager.loadProfile(user.getUid());
+                            // Setup observer for whenever we get the data back from firebase
+                            firebaseManager.getUserData().observe(getViewLifecycleOwner(), userProfile -> {
+                                // Check that user has at least one car in their profile
+                                if (userProfile != null && userProfile.containsKey("cars")) {
+                                    NavDirections actionGoToDashboard = LoginFragmentDirections.actionLoginFragmentToDashboardFragment();
+                                    navController.navigate(actionGoToDashboard);
+                                }
+                                else {
+                                    NavDirections actionGoToCarSearch = LoginFragmentDirections.actionLoginFragment2ToCarSearch();
+                                    navController.navigate(actionGoToCarSearch);
+                                }
+                            });
+
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
                             Toast.makeText(getActivity(), "Authentication failed", Toast.LENGTH_SHORT).show();
