@@ -1,6 +1,5 @@
 package com.example.carapp.Fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,15 +9,15 @@ import android.widget.Button;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
-import androidx.viewpager.widget.ViewPager;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.example.carapp.DashBoardActivity;
 import com.example.carapp.R;
-import com.example.carapp.ViewModels.MyFragmentPagerAdapter;
+import com.example.carapp.ViewModels.CarViewPagerAdapter;
+import com.example.carapp.ViewModels.FirebaseManager;
 
 public class ParentDashboardFragment extends Fragment {
 
@@ -35,7 +34,9 @@ public class ParentDashboardFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dashboard_swipe_activity, container, false);
         this.viewPager = rootView.findViewById(R.id.CarView);
-        this.viewPager.setAdapter(new MyFragmentPagerAdapter(getActivity()));
+        FirebaseManager repo = new ViewModelProvider(getActivity()).get(FirebaseManager.class);
+        this.viewPager.setAdapter(new CarViewPagerAdapter(getActivity()));
+        this.viewPager.setCurrentItem((int)(long)repo.getUserData().getValue().get("defaultCar"));
 
         Button addCar = rootView.findViewById(R.id.AddCar);
         Button removeCar = rootView.findViewById(R.id.RemoveCar);
@@ -65,7 +66,7 @@ public class ParentDashboardFragment extends Fragment {
                     navController.navigate(actionGoToCarSearch);
                 }
                 else if (view.getId() == R.id.RemoveCar) {
-                    MyFragmentPagerAdapter adapter = (MyFragmentPagerAdapter)viewPager.getAdapter();
+                    CarViewPagerAdapter adapter = (CarViewPagerAdapter)viewPager.getAdapter();
                     adapter.removeFragment(viewPager.getCurrentItem());
                 }
             }

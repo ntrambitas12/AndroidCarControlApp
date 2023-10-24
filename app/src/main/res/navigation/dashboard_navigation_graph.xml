@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dashboard_navigation_graph"
-    app:startDestination="@id/dashboardFragment2">
+    app:startDestination="@id/noCarDashboard">
 
     <fragment
         android:id="@+id/dashboardFragment2"
@@ -12,6 +12,9 @@
         <action
             android:id="@+id/action_dashboardFragment2_to_carSearch2"
             app:destination="@id/carSearch2" />
+        <action
+            android:id="@+id/action_dashboardFragment2_to_noCarDashboard"
+            app:destination="@id/noCarDashboard" />
     </fragment>
     <fragment
         android:id="@+id/carSearch2"
@@ -21,6 +24,12 @@
         <action
             android:id="@+id/action_carSearch_to_confirmCarSelection"
             app:destination="@id/confirmCarSelection2" />
+        <action
+            android:id="@+id/action_carSearch2_to_noCarDashboard"
+            app:destination="@id/noCarDashboard" />
+        <action
+            android:id="@+id/action_carSearch2_to_dashboardFragment2"
+            app:destination="@id/dashboardFragment2" />
     </fragment>
     <fragment
         android:id="@+id/confirmCarSelection2"
@@ -33,5 +42,16 @@
         <action
             android:id="@+id/action_confirmCarSelection_to_carSearch"
             app:destination="@id/carSearch2" />
+    </fragment>
+    <fragment
+        android:id="@+id/noCarDashboard"
+        android:name="com.example.carapp.Fragments.NoCarDashboard"
+        android:label="NoCarDashboard" >
+        <action
+            android:id="@+id/action_noCarDashboard_to_carSearch2"
+            app:destination="@id/carSearch2" />
+        <action
+            android:id="@+id/action_noCarDashboard_to_dashboardFragment2"
+            app:destination="@id/dashboardFragment2" />
     </fragment>
 </navigation>

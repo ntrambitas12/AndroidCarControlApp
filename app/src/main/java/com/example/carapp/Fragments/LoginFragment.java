@@ -104,20 +104,7 @@ public class LoginFragment extends Fragment {
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             Log.d(TAG, "signInWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            firebaseManager.loadProfile(user.getUid());
-                            // Setup observer for whenever we get the data back from firebase
-                            firebaseManager.getUserData().observe(getViewLifecycleOwner(), userProfile -> {
-                                // Check that user has at least one car in their profile
-                                if (userProfile != null && userProfile.containsKey("cars")) {
-                                    NavDirections actionGoToDashboard = LoginFragmentDirections.actionLoginFragmentToDashboardFragment();
-                                    navController.navigate(actionGoToDashboard);
-                                }
-                                else {
-                                    NavDirections actionGoToCarSearch = LoginFragmentDirections.actionLoginFragment2ToCarSearch();
-                                    navController.navigate(actionGoToCarSearch);
-                                }
-                            });
+                            startActivity(new Intent(getActivity(), DashBoardActivity.class));
 
                         } else {
                             Log.w(TAG, "signInWithEmail:failure", task.getException());
