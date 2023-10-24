@@ -65,4 +65,8 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp:$okHTTPVersion" )
     implementation("com.github.weliem:blessed-android:2.4.2")
     implementation("pl.droidsonroids.gif:android-gif-drawable:1.2.22")
-}
+    implementation("com.github.bumptech.glide:glide:4.11.0")
+
+    annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
+
+    }
