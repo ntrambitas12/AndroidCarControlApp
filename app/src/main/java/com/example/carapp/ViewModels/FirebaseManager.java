@@ -1,5 +1,7 @@
 package com.example.carapp.ViewModels;
 
+import android.util.Log;
+
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
@@ -9,6 +11,7 @@ import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class FirebaseManager extends ViewModel {
     private FirebaseRepository repository;
@@ -23,9 +26,8 @@ public class FirebaseManager extends ViewModel {
     public void addNewCar(String uid, String BTMacAddress, String Nickname, String VIN, String Color) {
         repository.addNewCar(uid, BTMacAddress, Nickname, VIN, Color);
     }
-    public void deleteCar(String uid, int carID) {
-        repository.deleteCar(uid, carID);
-
+    public void deleteCar(String uid, String carVIN) {
+        repository.deleteCar(uid, carVIN);
     }
     // Updates the currently selected car's data in firebase
     public void updateCurrentCarData(String uid, String BTMacAddress, String Nickname, String VIN, String Color) {

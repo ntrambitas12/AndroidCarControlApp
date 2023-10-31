@@ -1,5 +1,7 @@
 package com.example.carapp;
 
+import android.util.Log;
+
 import androidx.annotation.NonNull;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -13,11 +15,11 @@ import com.google.firebase.database.ValueEventListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 public class FirebaseRepository {
     private final FirebaseDatabase databaseSettings = FirebaseDatabase.getInstance();
     private final DatabaseReference database = databaseSettings.getReference();
-
 
 
     public FirebaseRepository() {
@@ -106,11 +108,29 @@ public class FirebaseRepository {
         return profileLiveData;
     }
 
-    /* Deletes a car from a user's profile.
-    carID is the index in the arrayList of the car to be deleted */
-    public void deleteCar(String uid, int carID) {
-        //TODO: Fill this method in
-
+    /* Deletes a car from a user's profile. */
+    public void deleteCar(String uid, String carVIN) {
+        LiveData<HashMap<String, Object>> userData = getUserData(uid);
+        userData.observeForever(new Observer<HashMap<String, Object>>() {
+            @Override
+            public void onChanged(HashMap<String, Object> profile) {
+                if (profile != null) {
+                    int position = 0;
+                    ArrayList<HashMap<String, Object>> newCars = new ArrayList<>();
+                    for (HashMap<String, Object> car : (List<HashMap<String, Object>>)profile.get("cars")) {
+                        if (!carVIN.equals(car.get("VIN").toString())) {
+                            newCars.add(car);
+                        } else if(profile.get("defaultCar").toString().equals(String.valueOf(position))) {
+                            profile.replace("defaultCar", 0);
+                        }
+                        position++;
+                    }
+                    profile.replace("cars", newCars);
+                    database.child("users").child(uid).setValue(profile);
+                    userData.removeObserver(this);
+                }
+            }
+        });
     }
     // Updates the currently selected car's data in firebase
     public void updateCurrentCarData(String uid, String BTMacAddress, String Nickname, String VIN, String Color) {
