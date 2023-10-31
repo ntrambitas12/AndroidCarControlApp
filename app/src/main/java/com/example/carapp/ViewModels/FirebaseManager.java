@@ -29,17 +29,18 @@ public class FirebaseManager extends ViewModel {
     public void deleteCar(String uid, String carVIN) {
         repository.deleteCar(uid, carVIN);
     }
+
     // Updates the currently selected car's data in firebase
     public void updateCurrentCarData(String uid, String BTMacAddress, String Nickname, String VIN, String Color) {
         repository.updateCurrentCarData(uid, BTMacAddress, Nickname, VIN, Color);
     }
 
-    public void deleteUser(String uid) {
-        repository.deleteUser(uid);
-    }
-
     public void updateCurrentlySelectedCar(String uid, int carID) {
         repository.updateCurrentlySelectedCar(uid, carID);
+    }
+
+    public void deleteUser(String uid) {
+        repository.deleteUser(uid);
     }
 
     public void updateUserData(String uid, String name) {
