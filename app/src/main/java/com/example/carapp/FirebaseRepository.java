@@ -16,6 +16,7 @@ import com.google.firebase.database.ValueEventListener;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class FirebaseRepository {
     private final FirebaseDatabase databaseSettings = FirebaseDatabase.getInstance();
@@ -134,7 +135,30 @@ public class FirebaseRepository {
     }
     // Updates the currently selected car's data in firebase
     public void updateCurrentCarData(String uid, String BTMacAddress, String Nickname, String VIN, String Color) {
-        //TODO: Fill this method in
+        LiveData<HashMap<String, Object>> userData = getUserData(uid);
+        userData.observeForever(new Observer<HashMap<String, Object>>() {
+            @Override
+            public void onChanged(HashMap<String, Object> profile) {
+                if (profile != null) {
+                    ArrayList<HashMap<String, Object>> newCars = new ArrayList<>();
+                    for (HashMap<String, Object> car : (List<HashMap<String, Object>>)profile.get("cars")) {
+                        if (!VIN.equals(car.get("VIN").toString())) {
+                            newCars.add(car);
+                        } else {
+                            HashMap<String, Object> newCar = new HashMap<>();
+                            newCar.put("BTMacAddress", BTMacAddress);
+                            newCar.put("Color", Color);
+                            newCar.put("VIN", VIN);
+                            newCar.put("nickName", Nickname);
+                            newCars.add(newCar);
+                        }
+                    }
+                    profile.replace("cars", newCars);
+                    database.child("users").child(uid).setValue(profile);
+                    userData.removeObserver(this);
+                }
+            }
+        });
     }
 
     // Updates the car that the user has currently selected in their profile
