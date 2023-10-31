@@ -19,11 +19,12 @@ import com.example.carapp.R;
 import com.example.carapp.ViewModels.CarViewPagerAdapter;
 import com.example.carapp.ViewModels.FirebaseManager;
 
+import java.util.HashMap;
+
 public class ParentDashboardFragment extends Fragment {
 
     private NavController navController;
     private ViewPager2 viewPager;
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -39,12 +40,8 @@ public class ParentDashboardFragment extends Fragment {
         this.viewPager.setCurrentItem((int)(long)repo.getUserData().getValue().get("defaultCar"));
 
         Button addCar = rootView.findViewById(R.id.AddCar);
-        Button removeCar = rootView.findViewById(R.id.RemoveCar);
-
         addCar.setOnClickListener(this.createListener());
-        removeCar.setOnClickListener(this.createListener());
 
-        //this.viewPager.setAdapter();
         return rootView;
     }
 
@@ -64,10 +61,6 @@ public class ParentDashboardFragment extends Fragment {
                     // Get email and password text and call signIn method
                     NavDirections actionGoToCarSearch = ParentDashboardFragmentDirections.actionDashboardFragment2ToCarSearch2();
                     navController.navigate(actionGoToCarSearch);
-                }
-                else if (view.getId() == R.id.RemoveCar) {
-                    CarViewPagerAdapter adapter = (CarViewPagerAdapter)viewPager.getAdapter();
-                    adapter.removeFragment(viewPager.getCurrentItem());
                 }
             }
         };

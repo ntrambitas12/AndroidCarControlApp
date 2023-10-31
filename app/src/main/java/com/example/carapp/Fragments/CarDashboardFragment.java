@@ -4,26 +4,34 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.carapp.R;
+import com.example.carapp.ViewModels.FirebaseManager;
+import com.google.firebase.auth.FirebaseAuth;
 
 public class CarDashboardFragment extends Fragment {
 
     private NavController navController;
-    String carName;
-    String carMakeModel;
+    private FirebaseAuth mAuth;
+    private FirebaseManager firebaseManager;
+    private String carName;
+    private String carMakeModel;
+    private String carVIN;
 
-    public CarDashboardFragment(String carName, String carMakeModel)
+    public CarDashboardFragment(String carName, String carMakeModel, String carVIN)
     {
         this.carName = carName;
         this.carMakeModel = carMakeModel;
+        this.carVIN = carVIN;
     }
 
     public CarDashboardFragment()
@@ -34,6 +42,8 @@ public class CarDashboardFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mAuth = FirebaseAuth.getInstance();
+        firebaseManager = new ViewModelProvider(requireActivity()).get(FirebaseManager.class);
     }
 
     @Nullable
@@ -44,6 +54,9 @@ public class CarDashboardFragment extends Fragment {
         TextView carMakeText = rootView.findViewById(R.id.CarMakeModel);
         carNameText.setText(this.carName);
         carMakeText.setText(this.carMakeModel);
+
+        Button removeCar = rootView.findViewById(R.id.RemoveCar);
+        removeCar.setOnClickListener(this.createListener());
 
         return rootView;
     }
@@ -56,4 +69,14 @@ public class CarDashboardFragment extends Fragment {
         navController = Navigation.findNavController(requireActivity(), R.id.Nav_Dashboard);
     }
 
+    private View.OnClickListener createListener() {
+        return new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (view.getId() == R.id.RemoveCar) {
+                    firebaseManager.deleteCar(mAuth.getUid(), carVIN);
+                }
+            }
+        };
+    }
 }

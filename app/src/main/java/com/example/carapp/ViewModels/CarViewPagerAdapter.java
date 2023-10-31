@@ -1,5 +1,7 @@
 package com.example.carapp.ViewModels;
 
+import android.util.Log;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -50,7 +52,7 @@ public class CarViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position)
     {
-        CarDashboardFragment newFrag = new CarDashboardFragment((String) cars.get(position).get("nickName"), "Car Make and Model");
+        CarDashboardFragment newFrag = new CarDashboardFragment((String) cars.get(position).get("nickName"), "Car Make and Model", cars.get(position).get("VIN").toString());
         //fragments.add(position, newFrag);
         return newFrag;
     }
@@ -58,7 +60,7 @@ public class CarViewPagerAdapter extends FragmentStateAdapter {
 
     public void removeFragment(int index) {
         fragments.remove(index);
-        repo.deleteCar(userID, index);
+//        repo.deleteCar(userID, index);
         notifyItemRemoved(index);
         notifyItemRangeChanged(index, fragments.size());
         updateItemIds();
@@ -91,7 +93,7 @@ public class CarViewPagerAdapter extends FragmentStateAdapter {
        this.cars = (ArrayList<HashMap<String, Object>>) data.get("cars");
        System.out.println(this.cars);
        for(HashMap<String, Object> car : this.cars) {
-           fragments.add(new CarDashboardFragment((String) car.get("nickName"), "Car Make and Model"));
+           fragments.add(new CarDashboardFragment((String) car.get("nickName"), "Car Make and Model", car.get("VIN").toString()));
        }
    }
 
