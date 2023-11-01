@@ -141,7 +141,8 @@ public class CarSearch extends Fragment {
                 // I
                 connectionManager.initialize(bluetoothLink, new WebConnection("TEST123", "www.test.com", viewModel), 2000);
                 NavDirections actionConfirmVIN = CarSearchDirections.actionCarSearchToConfirmCarSelection();
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionConfirmVIN);
+                Activity a = getActivity();
+                Navigation.findNavController(getActivity(), R.id.Nav_Dashboard).navigate(actionConfirmVIN);
             }
         };
 

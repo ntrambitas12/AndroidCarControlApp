@@ -96,7 +96,7 @@ private ConnectionManager connectionManager;
                 NavDirections actionDeviceConfirmed = ConfirmCarSelectionDirections.actionConfirmCarSelectionToDashboardFragment();
                 // Request to bond device once user confirms
                 connectionManager.getBluetoothLink().requestBond();
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionDeviceConfirmed);
+                Navigation.findNavController(getActivity(), R.id.Nav_Dashboard).navigate(actionDeviceConfirmed);
             } else {
                 // Error has occured
                 //TODO: handle this case here
@@ -108,7 +108,7 @@ private ConnectionManager connectionManager;
         VINDeclined.setOnClickListener(click -> {
             NavDirections actionVINDeclined = ConfirmCarSelectionDirections.actionConfirmCarSelectionToCarSearch();
             declinedDevice();
-            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionVINDeclined);
+            Navigation.findNavController(getActivity(), R.id.Nav_Dashboard).navigate(actionVINDeclined);
 
         });
     }

@@ -50,11 +50,11 @@ public class NoCarDashboard extends Fragment {
             public void onClick(View view) {
                 if (view.getId() == R.id.AddCarNoCar) {
                     // go to the pair car screen
-                    //NavDirections actionGoToCarSearch = NoCarDashboardDirections.actionNoCarDashboardToCarSearch2();
-                    //navController.navigate(actionGoToCarSearch);
+                    NavDirections actionGoToCarSearch = NoCarDashboardDirections.actionNoCarDashboardToCarSearch2();
+                    navController.navigate(actionGoToCarSearch);
 
                     //for now, to debug, add a fake car
-                    FirebaseManager firebaseManager = new ViewModelProvider(getActivity()).get(FirebaseManager.class);
+                    //FirebaseManager firebaseManager = new ViewModelProvider(getActivity()).get(FirebaseManager.class);
 
                 }
             }

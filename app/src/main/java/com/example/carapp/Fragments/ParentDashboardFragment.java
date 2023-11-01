@@ -59,8 +59,8 @@ public class ParentDashboardFragment extends Fragment {
             public void onClick(View view) {
                 if (view.getId() == R.id.AddCar) {
                     // Get email and password text and call signIn method
-                    NavDirections actionGoToCarSearch = ParentDashboardFragmentDirections.actionDashboardFragment2ToCarSearch2();
-                    navController.navigate(actionGoToCarSearch);
+                    //NavDirections actionGoToCarSearch = ParentDashboardFragmentDirections.actionDashboardFragment2ToCarSearch2();
+                  //  navController.navigate(actionGoToCarSearch);
                 }
             }
         };
