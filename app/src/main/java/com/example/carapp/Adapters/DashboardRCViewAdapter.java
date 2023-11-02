@@ -15,7 +15,15 @@ import com.example.carapp.R;
 
 import java.util.List;
 
+
 public class DashboardRCViewAdapter extends RecyclerView.Adapter<DashboardRCViewAdapter.ViewHolder> {
+    public interface OnItemClickListener {
+        void onItemClick(int itemId); // Define any parameters you need
+    }
+    private OnItemClickListener onItemClickListener;
+    public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
+        this.onItemClickListener = onItemClickListener;
+    }
     private List<DashboardLinkModel> items;
     private Context context;
     public DashboardRCViewAdapter(Context context, List<DashboardLinkModel> items) {
@@ -37,6 +45,15 @@ public class DashboardRCViewAdapter extends RecyclerView.Adapter<DashboardRCView
         // Set the data in the view
         holder.itemImage.setImageResource(link.getIconRes());
         holder.itemText.setText(link.getLinkText());
+        final int clickedItemNavDest = items.get(position).getNavDirection();
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (onItemClickListener != null) {
+                    onItemClickListener.onItemClick(clickedItemNavDest);
+                }
+            }
+        });
     }
 
     @Override

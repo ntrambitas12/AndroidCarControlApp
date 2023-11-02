@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class DashboardModern extends Fragment {
+public class DashboardModern extends Fragment implements DashboardRCViewAdapter.OnItemClickListener {
     private NavController navController;
     private FirebaseManager firebaseManager;
     private FirebaseAuth mAuth;
@@ -57,7 +57,7 @@ public class DashboardModern extends Fragment {
         View rootView = inflater.inflate(R.layout.dashboard_modern, container, false);
         return rootView;
     }
-   
+
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -75,6 +75,7 @@ public class DashboardModern extends Fragment {
         List<DashboardLinkModel> dashboardLinks = new ArrayList<>();
         populateSublinks(dashboardLinks);
         DashboardRCViewAdapter adapter = new DashboardRCViewAdapter(getContext(), dashboardLinks);
+        adapter.setOnItemClickListener(this); // Setup callback
         sublinks.setLayoutManager(new LinearLayoutManager(getContext()));
         sublinks.setAdapter(adapter);
 
@@ -106,7 +107,7 @@ public class DashboardModern extends Fragment {
         dashboardLinks.add(new DashboardLinkModel("Controls", R.drawable.controls, R.navigation.dashboard_navigation_graph));
         dashboardLinks.add(new DashboardLinkModel("Location", R.drawable.controls, R.navigation.dashboard_navigation_graph));
         dashboardLinks.add(new DashboardLinkModel("Charging", R.drawable.controls, R.navigation.dashboard_navigation_graph));
-        dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, R.navigation.dashboard_navigation_graph));
+        dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, R.id.carInfoFragment));
     }
 
     private void checkData(HashMap<String, Object> userData)
@@ -137,4 +138,10 @@ public class DashboardModern extends Fragment {
     }
 
 
+    @Override
+    public void onItemClick(int itemId) {
+        // Navigate to the correct destination based on link pressed
+        navController.navigate(itemId);
+
+    }
 }

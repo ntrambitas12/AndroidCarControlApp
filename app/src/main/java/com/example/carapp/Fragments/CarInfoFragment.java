@@ -60,11 +60,11 @@ public class CarInfoFragment extends Fragment {
         carColor = view.findViewById(R.id.editCarColor);
 
         String vin = CarInfoFragmentArgs.fromBundle(getArguments()).getCarVIN();
-        HashMap<String, Object> car = getSelectedCar(vin);
-        carNickname.setText(car.get("nickName").toString());
-        carMacAddress.setText(car.get("BTMacAddress").toString());
-        carVIN.setText(car.get("VIN").toString());
-        carColor.setText(car.get("Color").toString());
+//        HashMap<String, Object> car = getSelectedCar(vin);
+//        carNickname.setText(car.get("nickName").toString());
+//        carMacAddress.setText(car.get("BTMacAddress").toString());
+//        carVIN.setText(car.get("VIN").toString());
+//        carColor.setText(car.get("Color").toString());
 
         save.setOnClickListener(this.createListener());
         cancel.setOnClickListener(this.createListener());
