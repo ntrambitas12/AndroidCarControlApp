@@ -1,28 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layer-list xmlns:android="http://schemas.android.com/apk/res/android">
-    <!-- Battery outline -->
-    <item android:id="@+id/battery_outline">
-        <shape android:shape="rectangle">
-            <solid android:color="#CCCCCC" />
-            <corners android:radius="2dp" />
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="4dp" /> <!-- Adjust the radius for rounded corners -->
+            <solid android:color="#DDDDDD" /> <!-- Background color for unfilled part -->
         </shape>
     </item>
-    <!-- Battery fill (charge level) -->
-    <item android:id="@+id/battery_fill">
-        <shape android:shape="rectangle">
-            <solid android:color="#0BDD0B" />
-            <corners android:radius="2dp" />
-         />
-        </shape>
-    </item>
-    <!-- Thick border (black box) -->
-    <item android:id="@+id/battery_border">
-        <shape android:shape="rectangle">
-            <stroke android:width="2dp"
-            android:color="#737373" />
-            <solid android:color="@android:color/transparent" />
-            <corners android:radius="2dp" />
-        </shape>
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="4dp" />
+                <solid android:color="#019C10" /> <!-- Fill color for the progress -->
+            </shape>
+        </clip>
     </item>
 </layer-list>
 

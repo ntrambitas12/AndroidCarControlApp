@@ -83,8 +83,8 @@ public class CarDashboardFragment extends Fragment {
                 if (view.getId() == R.id.RemoveCar) {
                     firebaseManager.deleteCar(mAuth.getUid(), carVIN);
                 } else if (view.getId() == R.id.SettingsDiagnostics) {
-                    NavDirections actionGoToSettings = ParentDashboardFragmentDirections.actionDashboardFragment2ToCarInfoFragment().setCarVIN(carVIN);
-                    navController.navigate(actionGoToSettings);
+//                    NavDirections actionGoToSettings = ParentDashboardFragmentDirections.actionDashboardFragment2ToCarInfoFragment().setCarVIN(carVIN);
+//                    navController.navigate(actionGoToSettings);
                 }
             }
         };
