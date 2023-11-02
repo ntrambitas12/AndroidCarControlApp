@@ -15,6 +15,16 @@
         <action
             android:id="@+id/action_dashboardFragment2_to_noCarDashboard"
             app:destination="@id/noCarDashboard" />
+        <action
+            android:id="@+id/action_dashboardFragment2_to_carInfoFragment"
+            app:destination="@id/carInfoFragment">
+            <argument
+                android:name="carVIN"
+                app:argType="string"
+                app:nullable="true"
+                android:defaultValue="@null" />
+        </action>
+
     </fragment>
     <fragment
         android:id="@+id/carSearch2"
@@ -53,5 +63,18 @@
         <action
             android:id="@+id/action_noCarDashboard_to_dashboardFragment2"
             app:destination="@id/dashboardFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/carInfoFragment"
+        android:name="com.example.carapp.Fragments.CarInfoFragment"
+        android:label="CarInfoFragment" >
+        <action
+            android:id="@+id/action_carInfoFragment_to_dashboardFragment2"
+            app:destination="@id/dashboardFragment2" />
+        <argument
+            android:name="carVIN"
+            app:argType="string"
+            app:nullable="true"
+            android:defaultValue="@null" />
     </fragment>
 </navigation>

@@ -24,12 +24,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginBottom="619dp"
         android:ems="10"
         android:hint="Car Nickname"
         android:inputType="text"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/updateCarInfo"
         tools:layout_constraintTop_toBottomOf="@+id/updateCarInfo" />
 
     <EditText
@@ -37,11 +36,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginBottom="619dp"
         android:ems="10"
         android:hint="Car Mac Address"
         android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editCarNickname"
         tools:layout_constraintTop_toBottomOf="@+id/editCarNickname" />
 
     <EditText
@@ -49,11 +48,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginBottom="619dp"
         android:ems="10"
         android:hint="Car VIN Number"
         android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editCarMacAddress"
         tools:layout_constraintTop_toBottomOf="@+id/editCarMacAddress" />
 
     <EditText
@@ -61,11 +60,11 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="25dp"
-        android:layout_marginBottom="619dp"
         android:ems="10"
         android:hint="Car Color"
         android:inputType="text"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/editCarVIN"
         tools:layout_constraintTop_toBottomOf="@+id/editCarVIN" />
 
     <Button

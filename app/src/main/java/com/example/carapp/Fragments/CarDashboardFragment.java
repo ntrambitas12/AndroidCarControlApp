@@ -12,9 +12,11 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.example.carapp.R;
+import com.example.carapp.ViewModels.CarViewPagerAdapter;
 import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 
@@ -23,6 +25,7 @@ public class CarDashboardFragment extends Fragment {
     private NavController navController;
     private FirebaseAuth mAuth;
     private FirebaseManager firebaseManager;
+    private CarViewPagerAdapter carViewPagerAdapter;
     private String carName;
     private String carMakeModel;
     private String carVIN;
@@ -57,7 +60,10 @@ public class CarDashboardFragment extends Fragment {
         carMakeText.setText(this.carMakeModel);
 
         Button removeCar = rootView.findViewById(R.id.RemoveCar);
+        Button carSettings = rootView.findViewById(R.id.SettingsDiagnostics);
+
         removeCar.setOnClickListener(this.createListener());
+        carSettings.setOnClickListener(this.createListener());
 
         return rootView;
     }
@@ -76,6 +82,9 @@ public class CarDashboardFragment extends Fragment {
             public void onClick(View view) {
                 if (view.getId() == R.id.RemoveCar) {
                     firebaseManager.deleteCar(mAuth.getUid(), carVIN);
+                } else if (view.getId() == R.id.SettingsDiagnostics) {
+                    NavDirections actionGoToSettings = ParentDashboardFragmentDirections.actionDashboardFragment2ToCarInfoFragment().setCarVIN(carVIN);
+                    navController.navigate(actionGoToSettings);
                 }
             }
         };
