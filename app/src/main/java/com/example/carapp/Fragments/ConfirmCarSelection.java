@@ -70,13 +70,19 @@ private ConnectionManager connectionManager;
         return rootView;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        connectionManager.endConnection();
+    }
+
     private void setScreenButtons(View rootView) {
         // Set up button click for Unable to connect page
         Button tryAgain = rootView.findViewById(R.id.bt_unable_retry);
         tryAgain.setOnClickListener(click -> {
 
             NavDirections actionSearchBTDevices = ConfirmCarSelectionDirections.actionConfirmCarSelectionToCarSearch();
-            declinedDevice();
+            connectionManager.endConnection();
             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionSearchBTDevices);
         });
 
@@ -107,15 +113,12 @@ private ConnectionManager connectionManager;
         Button VINDeclined = rootView.findViewById(R.id.confirm_BT_no);
         VINDeclined.setOnClickListener(click -> {
             NavDirections actionVINDeclined = ConfirmCarSelectionDirections.actionConfirmCarSelectionToCarSearch();
-            declinedDevice();
+            connectionManager.endConnection();
             Navigation.findNavController(getActivity(), R.id.Nav_Dashboard).navigate(actionVINDeclined);
 
         });
     }
-    private void declinedDevice() {
-        connectionManager.endConnection();
-        viewModel.VINLiveData.setValue("");
-    }
+
     private void setupObservers() {
         final Observer<String> VINFound = VIN -> {
             if (VIN == "ERROR") {

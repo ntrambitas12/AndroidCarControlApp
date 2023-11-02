@@ -62,7 +62,10 @@ public class BluetoothSearchViewModel extends ViewModel {
 
     // Set Bluetooth connection status
     public void setBluetoothConnected(boolean status) {
-        bluetoothConnected.postValue(status);
+        bluetoothConnected.setValue(status);
+        if (status == false) {
+            VINLiveData.setValue("");
+        }
     }
 
     // Set Bluetooth enabled

@@ -11,27 +11,34 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.carapp.R;
+import com.example.carapp.ViewModels.CarViewPagerAdapter;
 import com.example.carapp.ViewModels.FirebaseManager;
 
-public class NoCarDashboard extends Fragment {
+public class DELETEParentDashboardFragment extends Fragment {
 
     private NavController navController;
+    private ViewPager2 viewPager;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.dashboard_no_car, container, false);
-        Button addCar = rootView.findViewById(R.id.AddCarNoCar);
-        addCar.setOnClickListener(createListener());
+        View rootView = inflater.inflate(R.layout.dashboard_swipe_activity, container, false);
+        this.viewPager = rootView.findViewById(R.id.CarView);
+        FirebaseManager repo = new ViewModelProvider(getActivity()).get(FirebaseManager.class);
+        this.viewPager.setAdapter(new CarViewPagerAdapter(getActivity()));
+        this.viewPager.setCurrentItem((int)(long)repo.getUserData().getValue().get("defaultCar"));
+
+        Button addCar = rootView.findViewById(R.id.AddCar);
+        addCar.setOnClickListener(this.createListener());
+
         return rootView;
     }
 
@@ -43,19 +50,14 @@ public class NoCarDashboard extends Fragment {
         navController = Navigation.findNavController(requireActivity(), R.id.Nav_Dashboard);
     }
 
-
     private View.OnClickListener createListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (view.getId() == R.id.AddCarNoCar) {
-                    // go to the pair car screen
-                    NavDirections actionGoToCarSearch = NoCarDashboardDirections.actionNoCarDashboardToCarSearch2();
-                    navController.navigate(actionGoToCarSearch);
-
-                    //for now, to debug, add a fake car
-                    //FirebaseManager firebaseManager = new ViewModelProvider(getActivity()).get(FirebaseManager.class);
-
+                if (view.getId() == R.id.AddCar) {
+                    // Get email and password text and call signIn method
+                    //NavDirections actionGoToCarSearch = ParentDashboardFragmentDirections.actionDashboardFragment2ToCarSearch2();
+                  //  navController.navigate(actionGoToCarSearch);
                 }
             }
         };

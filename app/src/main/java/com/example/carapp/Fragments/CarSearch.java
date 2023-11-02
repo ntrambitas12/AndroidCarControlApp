@@ -71,7 +71,7 @@ public class CarSearch extends Fragment {
         // Initialize Bluetooth-related components
         viewModel = new ViewModelProvider(requireActivity()).get(BluetoothSearchViewModel.class);
         connectionManager = new ViewModelProvider(requireActivity()).get(ConnectionManager.class);
-        bluetoothLink = new BluetoothConnection(viewModel, viewModel, getContext());
+        bluetoothLink = new BluetoothConnection(viewModel, getContext());
     }
 
     @Override
@@ -82,7 +82,7 @@ public class CarSearch extends Fragment {
         // Setup the button
         setupRQEnableBTButton(rootView);
         // Set the viewFlipper
-        viewFlipper = rootView.findViewById(R.id.view_flipper);
+        viewFlipper = rootView.findViewById(R.id.view_flipper_carSearch);
         // Disable auto-rotation for this fragment
       getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         return rootView;

@@ -1,23 +1,15 @@
 package com.example.carapp.ViewModels;
 
-import android.util.Log;
-
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
-import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
-import com.example.carapp.FirebaseRepository;
-import com.example.carapp.Fragments.CarDashboardFragment;
+import com.example.carapp.Fragments.DELETECarDashboardFragment;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
-import java.util.Dictionary;
 import java.util.HashMap;
-import java.util.Map;
 
 
 public class CarViewPagerAdapter extends FragmentStateAdapter {
@@ -52,7 +44,7 @@ public class CarViewPagerAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position)
     {
-        CarDashboardFragment newFrag = new CarDashboardFragment((String) cars.get(position).get("nickName"), "Car Make and Model", cars.get(position).get("VIN").toString());
+        DELETECarDashboardFragment newFrag = new DELETECarDashboardFragment((String) cars.get(position).get("nickName"), "Car Make and Model", cars.get(position).get("VIN").toString());
         //fragments.add(position, newFrag);
         return newFrag;
     }
@@ -93,7 +85,7 @@ public class CarViewPagerAdapter extends FragmentStateAdapter {
        this.cars = (ArrayList<HashMap<String, Object>>) data.get("cars");
        System.out.println(this.cars);
        for(HashMap<String, Object> car : this.cars) {
-           fragments.add(new CarDashboardFragment((String) car.get("nickName"), "Car Make and Model", car.get("VIN").toString()));
+           fragments.add(new DELETECarDashboardFragment((String) car.get("nickName"), "Car Make and Model", car.get("VIN").toString()));
        }
    }
 

@@ -4,7 +4,7 @@
     android:layout_height="match_parent">
 
         <ViewFlipper
-            android:id="@+id/view_flipper"
+            android:id="@+id/view_flipper_carSearch"
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 

@@ -12,7 +12,6 @@ import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
-import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
 import com.example.carapp.R;
@@ -20,7 +19,7 @@ import com.example.carapp.ViewModels.CarViewPagerAdapter;
 import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 
-public class CarDashboardFragment extends Fragment {
+public class DELETECarDashboardFragment extends Fragment {
 
     private NavController navController;
     private FirebaseAuth mAuth;
@@ -30,14 +29,14 @@ public class CarDashboardFragment extends Fragment {
     private String carMakeModel;
     private String carVIN;
 
-    public CarDashboardFragment(String carName, String carMakeModel, String carVIN)
+    public DELETECarDashboardFragment(String carName, String carMakeModel, String carVIN)
     {
         this.carName = carName;
         this.carMakeModel = carMakeModel;
         this.carVIN = carVIN;
     }
 
-    public CarDashboardFragment()
+    public DELETECarDashboardFragment()
     {
         this.carName = "Car Name";
         this.carMakeModel = "Car Make And Model";

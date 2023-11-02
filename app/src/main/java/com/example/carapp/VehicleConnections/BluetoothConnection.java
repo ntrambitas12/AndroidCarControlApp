@@ -28,7 +28,6 @@ import java.util.UUID;
 
 public class BluetoothConnection implements IBluetooth, Serializable {
 
-    private BluetoothSearchViewModel viewModel;
     private BluetoothSearchViewModel bluetoothSearchViewModel;
     private Context context;
 
@@ -65,7 +64,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
 
         @Override
         public void onDisconnectedPeripheral(final BluetoothPeripheral peripheral, final HciStatus status) {
-            viewModel.setBluetoothConnected(false);
+            bluetoothSearchViewModel.setBluetoothConnected(false);
             // Reconnect to this device when it becomes available again
                autoConnectRunnable = () -> {
                         if (connectedPeripheral != null) {
@@ -81,7 +80,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
             // and another for trying to pair to a new device
             if (isPairing) {
                 // Code here to add discovered devices to the list so that user can pair to them
-                viewModel.addDiscoveredDevice(scanResult.getDevice());
+                bluetoothSearchViewModel.addDiscoveredDevice(scanResult.getDevice());
             } else {
                 // We want to just connect to a device already bonded
                 if (peripheral.getBondState() == BondState.BONDED) {
@@ -98,13 +97,13 @@ public class BluetoothConnection implements IBluetooth, Serializable {
             if (state == BluetoothAdapter.STATE_ON) {
                 // Bluetooth is on now, start scanning again
                 startScan(isPairing);
-                viewModel.setBluetoothEnabled(true);
+                bluetoothSearchViewModel.setBluetoothEnabled(true);
 
             } else {
                 // Bluetooth is off
                 BTCentralManager.stopScan();
                 // Set flag that bluetooth is off and alert user to turn it on
-                viewModel.setBluetoothEnabled(false);
+                bluetoothSearchViewModel.setBluetoothEnabled(false);
             }
         }
     };
@@ -114,7 +113,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
             super.onServicesDiscovered(peripheral);
             // Set servicesDiscovered to true
             servicesDiscovered = true;
-            viewModel.setBluetoothConnected(true);
+            bluetoothSearchViewModel.setBluetoothConnected(true);
 
         }
 
@@ -167,8 +166,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
         }
     };
 
-    public BluetoothConnection(BluetoothSearchViewModel viewModel, BluetoothSearchViewModel bluetoothSearchViewModel, Context context) {
-        this.viewModel = viewModel;
+    public BluetoothConnection(BluetoothSearchViewModel bluetoothSearchViewModel, Context context) {
         this.context = context;
         this.bluetoothSearchViewModel = bluetoothSearchViewModel;
         BTCentralManager = new BluetoothCentralManager(this.context, BTCentralManagerCallback,
@@ -206,7 +204,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
 
     @Override
     public boolean isConnected() {
-        return viewModel.bluetoothConnected.getValue();
+        return bluetoothSearchViewModel.bluetoothConnected.getValue();
     }
 
     @Override
@@ -217,7 +215,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
             if (autoConnectRunnable !=  null) {
                 handler.removeCallbacks(autoConnectRunnable);
             }
-            viewModel.setBluetoothConnected(false);
+            bluetoothSearchViewModel.setBluetoothConnected(false);
         }
 
     }
