@@ -1,6 +1,7 @@
 package com.example.carapp.VehicleConnections;
 
 import android.bluetooth.BluetoothAdapter;
+import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothGattCharacteristic;
 import android.bluetooth.BluetoothGattService;
 import android.bluetooth.le.ScanResult;
@@ -9,8 +10,9 @@ import android.os.Handler;
 import android.os.Looper;
 
 import androidx.annotation.NonNull;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
-import com.example.carapp.ViewModels.BluetoothSearchViewModel;
 import com.welie.blessed.BluetoothCentralManager;
 import com.welie.blessed.BluetoothCentralManagerCallback;
 import com.welie.blessed.BluetoothPeripheral;
@@ -27,15 +29,19 @@ import java.io.Serializable;
 import java.util.UUID;
 
 public class BluetoothConnection implements IBluetooth, Serializable {
+    /* Public Variables for viewModel*/
+    public static final MutableLiveData<Boolean> BTConnectedToPeripheral = new MutableLiveData<>(false);
+    public static final MutableLiveData<Boolean> BTPowerState = new MutableLiveData<>();
+    public static final MutableLiveData<BluetoothDevice> discoveredDevices = new MutableLiveData<>();
 
-    private BluetoothSearchViewModel bluetoothSearchViewModel;
+
+    // Private variables
     private Context context;
-
     private boolean isPairing = false;
-    private boolean servicesDiscovered = false;
     private BluetoothCentralManager BTCentralManager;
     private BluetoothPeripheral connectedPeripheral;
     private final Handler handler = new Handler();
+    private final MutableLiveData<JSONObject> carResp = new MutableLiveData<>();
     private final UUID esp32ServiceUUID = UUID.fromString("91bad492-b950-4226-aa2b-4ede9fa42f59");
     private final UUID esp32WriteCharacteristicUUID = UUID.fromString("cba1d466-344c-4be3-ab3f-189f80dd7518");
     private final UUID esp32ReadCharacteristicUUID = UUID.fromString("c8ca6af0-5c97-11ee-9b23-8b8ec8fa712a");
@@ -64,7 +70,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
 
         @Override
         public void onDisconnectedPeripheral(final BluetoothPeripheral peripheral, final HciStatus status) {
-            bluetoothSearchViewModel.setBluetoothConnected(false);
+            BTConnectedToPeripheral.setValue(false);
             // Reconnect to this device when it becomes available again
                autoConnectRunnable = () -> {
                         if (connectedPeripheral != null) {
@@ -80,7 +86,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
             // and another for trying to pair to a new device
             if (isPairing) {
                 // Code here to add discovered devices to the list so that user can pair to them
-                bluetoothSearchViewModel.addDiscoveredDevice(scanResult.getDevice());
+                discoveredDevices.setValue(scanResult.getDevice());
             } else {
                 // We want to just connect to a device already bonded
                 if (peripheral.getBondState() == BondState.BONDED) {
@@ -97,13 +103,13 @@ public class BluetoothConnection implements IBluetooth, Serializable {
             if (state == BluetoothAdapter.STATE_ON) {
                 // Bluetooth is on now, start scanning again
                 startScan(isPairing);
-                bluetoothSearchViewModel.setBluetoothEnabled(true);
+                BTPowerState.setValue(true);
 
             } else {
                 // Bluetooth is off
                 BTCentralManager.stopScan();
                 // Set flag that bluetooth is off and alert user to turn it on
-                bluetoothSearchViewModel.setBluetoothEnabled(false);
+                BTPowerState.setValue(false);
             }
         }
     };
@@ -111,10 +117,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
         @Override
         public void onServicesDiscovered(@NonNull BluetoothPeripheral peripheral) {
             super.onServicesDiscovered(peripheral);
-            // Set servicesDiscovered to true
-            servicesDiscovered = true;
-            bluetoothSearchViewModel.setBluetoothConnected(true);
-
+            BTConnectedToPeripheral.setValue(true);
         }
 
         @Override
@@ -131,7 +134,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
                     // Try to parse resp as a carObj
                     try {
                         // Add newly received carState data to the queue
-                        bluetoothSearchViewModel.updateCarState(new JSONObject(jsonString));
+                        carResp.setValue(new JSONObject(jsonString));
                     } catch (JSONException e) {
                         // error not being able to parse JSON
                     }
@@ -166,11 +169,11 @@ public class BluetoothConnection implements IBluetooth, Serializable {
         }
     };
 
-    public BluetoothConnection(BluetoothSearchViewModel bluetoothSearchViewModel, Context context) {
+    public BluetoothConnection(Context context) {
         this.context = context;
-        this.bluetoothSearchViewModel = bluetoothSearchViewModel;
         BTCentralManager = new BluetoothCentralManager(this.context, BTCentralManagerCallback,
                 new Handler(Looper.getMainLooper()));
+        BTPowerState.setValue(BTCentralManager.isBluetoothEnabled()); // Set the initial value
 
 
     }
@@ -198,16 +201,6 @@ public class BluetoothConnection implements IBluetooth, Serializable {
     }
 
     @Override
-    public boolean isBTEnabled() {
-        return BTCentralManager.isBluetoothEnabled();
-    }
-
-    @Override
-    public boolean isConnected() {
-        return bluetoothSearchViewModel.bluetoothConnected.getValue();
-    }
-
-    @Override
     public void endConnection() {
         if (connectedPeripheral != null) {
             connectedPeripheral.cancelConnection();
@@ -215,7 +208,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
             if (autoConnectRunnable !=  null) {
                 handler.removeCallbacks(autoConnectRunnable);
             }
-            bluetoothSearchViewModel.setBluetoothConnected(false);
+            BTConnectedToPeripheral.setValue(false);
         }
 
     }
@@ -236,7 +229,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
     }
 
     @Override
-    public void receiveFromCar() {
+    public LiveData<JSONObject> receiveFromCar() {
         if (connectedPeripheral != null) {
             BluetoothGattService service = connectedPeripheral.getService(esp32ServiceUUID);
             if (service != null) {
@@ -244,6 +237,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
                 connectedPeripheral.readCharacteristic(readCharacteristic);
             }
         }
+        return carResp;
     }
     public void requestBond() {
         if (connectedPeripheral != null && connectedPeripheral.getBondState() != BondState.BONDED) {

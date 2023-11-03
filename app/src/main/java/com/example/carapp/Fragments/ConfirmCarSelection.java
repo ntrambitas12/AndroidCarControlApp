@@ -17,7 +17,7 @@ import android.widget.ViewFlipper;
 
 import com.example.carapp.R;
 import com.example.carapp.VehicleConnections.ConnectionManager;
-import com.example.carapp.ViewModels.BluetoothSearchViewModel;
+import com.example.carapp.ViewModels.BluetoothSearchHelper;
 import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class ConfirmCarSelection extends Fragment {
 
 private ViewFlipper viewFlipper;
-private BluetoothSearchViewModel viewModel;
+private BluetoothSearchHelper bluetoothSearchHelper;
 private FirebaseManager firebaseManager;
 private TextView VINDisplay;
 private ConnectionManager connectionManager;
@@ -37,8 +37,8 @@ private ConnectionManager connectionManager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(BluetoothSearchViewModel.class);
         connectionManager = new ViewModelProvider(requireActivity()).get(ConnectionManager.class);
+        bluetoothSearchHelper = new BluetoothSearchHelper(connectionManager);
         firebaseManager = new ViewModelProvider(requireActivity()).get(FirebaseManager.class);
 
     }
@@ -58,9 +58,9 @@ private ConnectionManager connectionManager;
         // Setup Observers
         setupObservers();
         //Ensure the right view is displayed on load
-        String VIN = viewModel.VINLiveData.getValue();
+        String VIN = bluetoothSearchHelper.VINLiveData.getValue();
         if (VIN.length() == 0) {
-            viewModel.startVINSearch();
+            bluetoothSearchHelper.startVINSearch();
         } else if (VIN == "ERROR") {
             viewFlipper.setDisplayedChild(2); // Set the unable to connect screen
         } else {
@@ -92,7 +92,7 @@ private ConnectionManager connectionManager;
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
             if (user != null ) {
-                String VIN = viewModel.VINLiveData.getValue();
+                String VIN = bluetoothSearchHelper.VINLiveData.getValue();
                 String uid = user.getUid();
                 String BTMacAddr = connectionManager.getBluetoothLink().getConnectedDeviceUUID();
                 //TODO: Add flow to get nickname and color
@@ -102,6 +102,7 @@ private ConnectionManager connectionManager;
                 NavDirections actionDeviceConfirmed = ConfirmCarSelectionDirections.actionConfirmCarSelectionToDashboardFragment();
                 // Request to bond device once user confirms
                 connectionManager.getBluetoothLink().requestBond();
+                bluetoothSearchHelper.destroyClass();
                 Navigation.findNavController(getActivity(), R.id.Nav_Dashboard).navigate(actionDeviceConfirmed);
             } else {
                 // Error has occured
@@ -129,6 +130,6 @@ private ConnectionManager connectionManager;
                 viewFlipper.setDisplayedChild(1); // Set the confirm VIN screen
             }
         };
-        viewModel.VINLiveData.observe(getViewLifecycleOwner(), VINFound);
+        bluetoothSearchHelper.VINLiveData.observe(getViewLifecycleOwner(), VINFound);
     }
 }

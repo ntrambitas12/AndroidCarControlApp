@@ -47,7 +47,7 @@
         <action
             android:id="@+id/action_confirmCarSelection_to_carSearch"
             app:destination="@id/carSearch2"
-            app:popUpTo="@id/dashboard_navigation_graph"/>
+            app:popUpTo="@id/dashboard_navigation_graph" />
     </fragment>
     <fragment
         android:id="@+id/carInfoFragment"
