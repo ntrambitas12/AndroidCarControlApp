@@ -23,6 +23,7 @@ import com.example.carapp.Adapters.DashboardRCViewAdapter;
 import com.example.carapp.Model.Car;
 import com.example.carapp.Model.DashboardLinkModel;
 import com.example.carapp.R;
+import com.example.carapp.VehicleConnections.ConnectionManager;
 import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +43,8 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     private LiveData<HashMap<String, Object>> userData;
     private Observer<HashMap<String, Object>> userDataObserver;
     private List<Car> usersCars;
+    private int selectedCar; // variable that holds which car in the usersCars list is currently selected
+    private ConnectionManager connectionManager;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,7 +53,7 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         usersCars = new ArrayList<>();
-
+        connectionManager = new ViewModelProvider(requireActivity()).get(ConnectionManager.class);
     }
 
     @Nullable
@@ -117,7 +120,9 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         // Check that user has at least one car in their profile
         if ((userData != null && userData.containsKey("cars"))) {
             usersCars.clear(); // Empty out the list first to write new data
-
+            // get the user's default car
+            // (this is the car that will first be selected on load
+            selectedCar = Math.toIntExact((Long) userData.get("defaultCar"));
             // Get all the user's cars
             List<HashMap<String, Object>> retrievedCars = (List<HashMap<String, Object>>) userData.get("cars");
 
@@ -138,6 +143,8 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
                 // Write the created carObject to the list
                 usersCars.add(newCar);
             }
+            // Connect to the loaded in car using connectionManager
+            connectionManager.ConnectToCar(usersCars.get(selectedCar));
             // Show the dashboard normally
             viewFlipper.setDisplayedChild(0);
         }

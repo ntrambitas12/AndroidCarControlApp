@@ -10,6 +10,8 @@ import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 
+import com.example.carapp.Model.Car;
+
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -30,7 +32,7 @@ public class ConnectionManager extends AndroidViewModel {
         super(application);
         // Initialize connections
         WebLink = new WebConnection(
-                "ENTER WEB URL HERE");
+                "http://www.google.com"); //TODO: REPLACE WITH ACTUAL API CALL HERE
         BluetoothLink = new BluetoothConnection(application.getApplicationContext());
         // Get initial values
         BTPowerState = BluetoothConnection.BTPowerState.getValue();
@@ -50,7 +52,7 @@ public class ConnectionManager extends AndroidViewModel {
         handler.postDelayed(runnable, refreshInterval);
     }
 
-    // Initialize for both bluetooth and web communication (call only once)
+    // Method that will establish a connection to a car
     public void ConnectToCar(String BTMacAddress, String VIN) {
         // VIN can be optional. If using only BT, pass VIN as null
         if (VIN != null) {
@@ -59,14 +61,20 @@ public class ConnectionManager extends AndroidViewModel {
 
         // Before attempting to connect, I check that the new device I want to connect
         // to isn't the same device as the currently connected device
-        if (BTConnected && BluetoothLink.getConnectedDeviceUUID() != BTMacAddress) {
+        if (BluetoothLink.getConnectedDeviceUUID() != BTMacAddress) {
             // If already connected to BT, disconnect first before attempting to connect to another device
             BluetoothLink.endConnection();
-        }
-        if (BluetoothLink.getConnectedDeviceUUID() != BTMacAddress) {
             BluetoothLink.connectToTargetDevice(BTMacAddress);
         }
 
+    }
+
+    // Helper method created that accepts a car object
+    // Initiates a connection to specified car (Calls method above)
+    public void ConnectToCar(Car car) {
+        String BTMacAddress = car.getBTMacAddress();
+        String VIN = car.getVIN();
+        this.ConnectToCar(BTMacAddress, VIN);
     }
 
     public void startBTScan(boolean pairingMode) {

@@ -56,8 +56,7 @@ public class BluetoothConnection implements IBluetooth, Serializable {
 //            }
             // Now that device is connected, we can stop scanning
             BTCentralManager.stopScan();
-            // Since already connected, isPairing can be set to false
-            isPairing = false;
+
             // Save the connected device
             connectedPeripheral = peripheral;
         }
@@ -117,6 +116,9 @@ public class BluetoothConnection implements IBluetooth, Serializable {
         public void onServicesDiscovered(@NonNull BluetoothPeripheral peripheral) {
             super.onServicesDiscovered(peripheral);
             BTConnectedToPeripheral.setValue(true);
+            if (!isPairing) {
+                requestBond(); // If not in pairing mode, automatically create a bond
+            }
         }
 
         @Override
@@ -236,12 +238,15 @@ public class BluetoothConnection implements IBluetooth, Serializable {
         }
         return carResp;
     }
-    public void requestBond() {
+    private void requestBond() {
         if (connectedPeripheral != null && connectedPeripheral.getBondState() != BondState.BONDED) {
             connectedPeripheral.createBond();
         }
     }
-
+    @Override
+    public void exitPairingMode() {
+        this.isPairing = false;
+    }
     @Override
     public String getConnectedDeviceUUID() {
         if (connectedPeripheral != null) {

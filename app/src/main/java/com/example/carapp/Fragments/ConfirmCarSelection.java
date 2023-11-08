@@ -99,11 +99,12 @@ private ConnectionManager connectionManager;
                 String nickname = "TEST";
                 String color = "#1234abc";
                 firebaseManager.addNewCar(uid,BTMacAddr, nickname,VIN,color);
+                // Exit pairing mode as we've paired
+                connectionManager.getBluetoothLink().exitPairingMode();
                 // Officially Connect to the car by also passing in its VIN
+                connectionManager.endConnection(); // Need to end connection first otherwise notification to bond won't appear
                 connectionManager.ConnectToCar(BTMacAddr, VIN);
                 NavDirections actionDeviceConfirmed = ConfirmCarSelectionDirections.actionConfirmCarSelectionToDashboardFragment();
-                // Request to bond device once user confirms
-                connectionManager.getBluetoothLink().requestBond();
                 bluetoothSearchHelper.destroyClass();
                 Navigation.findNavController(getActivity(), R.id.Nav_Dashboard).navigate(actionDeviceConfirmed);
             } else {
