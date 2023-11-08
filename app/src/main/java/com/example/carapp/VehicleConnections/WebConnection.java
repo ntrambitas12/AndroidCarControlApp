@@ -3,8 +3,6 @@ package com.example.carapp.VehicleConnections;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 
-import com.example.carapp.ViewModels.BluetoothSearchHelper;
-
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -21,19 +19,19 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class WebConnection implements IConnection{
-    private String URL;
+    private final String URL;
     private static final MediaType JSON = MediaType.parse("application/json; charset=utf-8");
     private final OkHttpClient client;
-    private final String VIN;
+    private String VIN;
     private final ExecutorService executorService = Executors.newFixedThreadPool(2);
     private final MutableLiveData<JSONObject> carResp = new MutableLiveData<>();
 
-    public WebConnection(String VIN, String Address) {
+    public WebConnection(String Address) {
         this.client  = new OkHttpClient();
-        this.VIN = VIN;
         this.URL = Address;
     }
 
+    public void setVIN(String VIN) { this.VIN = VIN; }
 
     @Override
     public void endConnection() {
@@ -42,23 +40,25 @@ public class WebConnection implements IConnection{
 
     @Override
     public void sendToCar(Command Payload) {
-        executorService.submit(() -> {
-            try {
-                // Create the request body
-                RequestBody requestBody = RequestBody.create(String.valueOf(Payload), JSON);
+        if (VIN != null) {
+            executorService.submit(() -> {
+                try {
+                    // Create the request body
+                    RequestBody requestBody = RequestBody.create(String.valueOf(Payload), JSON);
 
-                // Create PUT request
-                Request request = new Request.Builder()
-                        .url(this.URL)
-                        .put(requestBody)
-                        .addHeader("set-vin", this.VIN)
-                        .build();
-                client.newCall(request).execute();
-            } catch (IOException e) {
-                // Unable to send to webserver
-            }
+                    // Create PUT request
+                    Request request = new Request.Builder()
+                            .url(this.URL)
+                            .put(requestBody)
+                            .addHeader("set-vin", this.VIN)
+                            .build();
+                    client.newCall(request).execute();
+                } catch (IOException e) {
+                    // Unable to send to webserver
+                }
 
-        });
+            });
+        }
     }
 
     public LiveData<JSONObject> receiveFromCar() {

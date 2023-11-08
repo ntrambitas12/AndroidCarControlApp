@@ -1,4 +1,4 @@
-package com.example.carapp.ViewModels;
+package com.example.carapp.Adapters;
 
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModelProvider;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
 import com.example.carapp.Fragments.DELETECarDashboardFragment;
+import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 
 import java.util.ArrayList;

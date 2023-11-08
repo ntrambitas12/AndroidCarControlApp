@@ -1,4 +1,4 @@
-package com.example.carapp;
+package com.example.carapp.Model;
 
 public class DashboardLinkModel {
     private String linkText;

@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ViewFlipper;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -21,7 +20,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carapp.Adapters.DashboardRCViewAdapter;
-import com.example.carapp.DashboardLinkModel;
+import com.example.carapp.Model.Car;
+import com.example.carapp.Model.DashboardLinkModel;
 import com.example.carapp.R;
 import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -41,6 +41,7 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     private ViewFlipper viewFlipper;
     private LiveData<HashMap<String, Object>> userData;
     private Observer<HashMap<String, Object>> userDataObserver;
+    private List<Car> usersCars;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +49,7 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         firebaseManager = new ViewModelProvider(this).get(FirebaseManager.class);
         mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
+        usersCars = new ArrayList<>();
 
     }
 
@@ -114,6 +116,28 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     {
         // Check that user has at least one car in their profile
         if ((userData != null && userData.containsKey("cars"))) {
+            usersCars.clear(); // Empty out the list first to write new data
+
+            // Get all the user's cars
+            List<HashMap<String, Object>> retrievedCars = (List<HashMap<String, Object>>) userData.get("cars");
+
+            //Iterate through all the cars retrieved
+            for (HashMap<String, Object> car: retrievedCars) {
+                // Create a new car object that holds all the values contained within the hashmap
+                String VIN = (String) car.get("VIN");
+                String BTAddress = (String) car.get("BTMacAddress");
+                Car newCar = new Car(BTAddress, VIN);
+
+                // Add the optional params to car object
+                if (car.containsKey("Color")) {
+                    newCar.setColor((String) car.get("Color"));
+                }
+                if (car.containsKey("nickName")) {
+                    newCar.setNickName((String) car.get("nickName"));
+                }
+                // Write the created carObject to the list
+                usersCars.add(newCar);
+            }
             // Show the dashboard normally
             viewFlipper.setDisplayedChild(0);
         }

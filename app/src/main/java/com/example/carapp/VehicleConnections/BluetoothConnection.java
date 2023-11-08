@@ -31,14 +31,13 @@ import java.util.UUID;
 public class BluetoothConnection implements IBluetooth, Serializable {
     /* Public Variables for viewModel*/
     public static final MutableLiveData<Boolean> BTConnectedToPeripheral = new MutableLiveData<>(false);
-    public static final MutableLiveData<Boolean> BTPowerState = new MutableLiveData<>();
+    public static final MutableLiveData<Boolean> BTPowerState = new MutableLiveData<>(true);
     public static final MutableLiveData<BluetoothDevice> discoveredDevices = new MutableLiveData<>();
 
 
     // Private variables
-    private Context context;
     private boolean isPairing = false;
-    private BluetoothCentralManager BTCentralManager;
+    private final BluetoothCentralManager BTCentralManager;
     private BluetoothPeripheral connectedPeripheral;
     private final Handler handler = new Handler();
     private final MutableLiveData<JSONObject> carResp = new MutableLiveData<>();
@@ -170,13 +169,11 @@ public class BluetoothConnection implements IBluetooth, Serializable {
     };
 
     public BluetoothConnection(Context context) {
-        this.context = context;
-        BTCentralManager = new BluetoothCentralManager(this.context, BTCentralManagerCallback,
+        BTCentralManager = new BluetoothCentralManager(context, BTCentralManagerCallback,
                 new Handler(Looper.getMainLooper()));
         BTPowerState.setValue(BTCentralManager.isBluetoothEnabled()); // Set the initial value
-
-
     }
+
 
     // Method to start scanning for ESP32 device. Activity needs to set whether to go into pairing
     // or if to reconnect to a bonded device

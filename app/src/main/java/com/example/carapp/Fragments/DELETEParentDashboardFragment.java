@@ -15,7 +15,7 @@ import androidx.navigation.Navigation;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.example.carapp.R;
-import com.example.carapp.ViewModels.CarViewPagerAdapter;
+import com.example.carapp.Adapters.CarViewPagerAdapter;
 import com.example.carapp.ViewModels.FirebaseManager;
 
 public class DELETEParentDashboardFragment extends Fragment {

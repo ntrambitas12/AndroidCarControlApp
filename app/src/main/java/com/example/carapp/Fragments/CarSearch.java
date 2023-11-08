@@ -28,14 +28,13 @@ import android.widget.ViewFlipper;
 import com.example.carapp.Adapters.BluetoothDeviceAdapter;
 import com.example.carapp.VehicleConnections.ConnectionManager;
 import com.example.carapp.VehicleConnections.WebConnection;
-import com.example.carapp.ViewModels.BluetoothSearchHelper;
+import com.example.carapp.VehicleConnections.BluetoothSearchHelper;
 import com.example.carapp.R;
 import com.example.carapp.VehicleConnections.BluetoothConnection;
 import com.example.carapp.VehicleConnections.IBluetooth;
 
 public class CarSearch extends Fragment {
     private final String TAG = "CarSearchFragment";
-    private IBluetooth bluetoothLink;
     private ListView devicesList;
     private BluetoothSearchHelper BTSearchHelper;
     private ConnectionManager connectionManager;
@@ -70,6 +69,9 @@ public class CarSearch extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Log.d(TAG, "onCreate executed!");
+        // Initialize Bluetooth-related components
+        connectionManager = new ViewModelProvider(requireActivity()).get(ConnectionManager.class);
+        BTSearchHelper = new BluetoothSearchHelper(connectionManager);
 
     }
 
@@ -84,6 +86,9 @@ public class CarSearch extends Fragment {
         viewFlipper = rootView.findViewById(R.id.view_flipper_carSearch);
         // Disable auto-rotation for this fragment
       getActivity().setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        // Listen to changes on BT state change
+        observeBluetoothData();
+
         return rootView;
     }
 
@@ -91,18 +96,13 @@ public class CarSearch extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // Initialize Bluetooth-related components
-        connectionManager = new ViewModelProvider(requireActivity()).get(ConnectionManager.class);
-        bluetoothLink = new BluetoothConnection(getContext());
-        connectionManager.initialize(bluetoothLink, 1000);
-        BTSearchHelper = new BluetoothSearchHelper(connectionManager);
+
 
         setupUI(view);
-        observeBluetoothData();
         Log.d(TAG, "onViewCreated executed!");
         // Ensure BT is enabled
-        if (BluetoothConnection.BTPowerState.getValue()) {
-            bluetoothLink.startScan(true); // Set isPairing to true as we want to scan for device{s
+        if (Boolean.TRUE.equals(BluetoothConnection.BTPowerState.getValue())) {
+            connectionManager.startBTScan(true); // Set isPairing to true as we want to scan for devices
         } else {
             // Request to have BT enabled
             Intent turnOnBluetooth = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -148,7 +148,6 @@ public class CarSearch extends Fragment {
         isBluetoothDeviceConnected = state -> {
             if (state) {
                 // Bluetooth device connected, move to the next screen
-                connectionManager.addWebLink(new WebConnection("TEST123", "www.test.com"));
                 NavDirections actionConfirmVIN = CarSearchDirections.actionCarSearchToConfirmCarSelection();
                 Activity a = getActivity();
                 Navigation.findNavController(getActivity(), R.id.Nav_Dashboard).navigate(actionConfirmVIN);
@@ -193,7 +192,8 @@ public class CarSearch extends Fragment {
             BluetoothDevice selectedDevice = deviceAdapter.getItem(pos);
             if (selectedDevice != null) {
                 // Logic to start the pairing process
-                bluetoothLink.connectToTargetDevice(selectedDevice.getAddress());
+                // passing VIN as null as we haven't confirmed the device yet
+                connectionManager.ConnectToCar(selectedDevice.getAddress(), null);
             }
         });
     }

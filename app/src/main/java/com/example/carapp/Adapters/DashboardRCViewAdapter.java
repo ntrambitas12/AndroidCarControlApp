@@ -10,7 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.carapp.DashboardLinkModel;
+import com.example.carapp.Model.DashboardLinkModel;
 import com.example.carapp.R;
 
 import java.util.List;

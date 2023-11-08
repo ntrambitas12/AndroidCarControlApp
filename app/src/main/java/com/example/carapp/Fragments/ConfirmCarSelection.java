@@ -17,7 +17,7 @@ import android.widget.ViewFlipper;
 
 import com.example.carapp.R;
 import com.example.carapp.VehicleConnections.ConnectionManager;
-import com.example.carapp.ViewModels.BluetoothSearchHelper;
+import com.example.carapp.VehicleConnections.BluetoothSearchHelper;
 import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -99,6 +99,8 @@ private ConnectionManager connectionManager;
                 String nickname = "TEST";
                 String color = "#1234abc";
                 firebaseManager.addNewCar(uid,BTMacAddr, nickname,VIN,color);
+                // Officially Connect to the car by also passing in its VIN
+                connectionManager.ConnectToCar(BTMacAddr, VIN);
                 NavDirections actionDeviceConfirmed = ConfirmCarSelectionDirections.actionConfirmCarSelectionToDashboardFragment();
                 // Request to bond device once user confirms
                 connectionManager.getBluetoothLink().requestBond();

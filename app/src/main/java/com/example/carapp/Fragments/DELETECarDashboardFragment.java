@@ -15,7 +15,7 @@ import androidx.navigation.NavController;
 import androidx.navigation.Navigation;
 
 import com.example.carapp.R;
-import com.example.carapp.ViewModels.CarViewPagerAdapter;
+import com.example.carapp.Adapters.CarViewPagerAdapter;
 import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 

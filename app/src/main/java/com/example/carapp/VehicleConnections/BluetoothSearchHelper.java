@@ -1,8 +1,9 @@
-package com.example.carapp.ViewModels;
+package com.example.carapp.VehicleConnections;
 
 import android.app.Activity;
 import android.bluetooth.BluetoothDevice;
 
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.Observer;
 
@@ -24,7 +25,7 @@ import java.util.concurrent.TimeUnit;
 /* This helper class contains the functions and logic necessary for finding
  and connecting to the car's Bluetooth device. Once the Bluetooth Adapter is paired,
  this class will be garbage-collected. The connectionManager viewModel should be used instead*/
-public class BluetoothSearchHelper implements ConnectionManager.ConnectionManagerCallback{
+public class BluetoothSearchHelper{
     // LiveData instances
     private BluetoothDeviceAdapter deviceAdapter;
     private Set<BluetoothDevice> discoveredDevices = new HashSet<>();
@@ -34,11 +35,14 @@ public class BluetoothSearchHelper implements ConnectionManager.ConnectionManage
     private boolean isConfirmingVIN = false;
     private Observer<Boolean> btConnectedObserver;
     private Observer<BluetoothDevice> btDiscoveredObserver;
+    private Observer<JSONObject> carResponseObserver;
     private ConnectionManager connectionManager;
+    private LiveData<JSONObject> carResp;
 
      public BluetoothSearchHelper(ConnectionManager connectionManager) {
          this.connectionManager = connectionManager;
-         connectionManager.addObserver(this);
+
+
 
          // Create Observers
           btConnectedObserver = connected -> {
@@ -47,11 +51,15 @@ public class BluetoothSearchHelper implements ConnectionManager.ConnectionManage
               }
           };
 
+          carResponseObserver = jsonObject -> receivedFromCar(jsonObject);
+
           btDiscoveredObserver = bluetoothDevices -> addDiscoveredDevice(bluetoothDevices);
 
           // Observe for changes in the observers
          BluetoothConnection.BTConnectedToPeripheral.observeForever(btConnectedObserver);
          BluetoothConnection.discoveredDevices.observeForever(btDiscoveredObserver);
+         carResp = connectionManager.getReceivedFromCarListener();
+         carResp.observeForever(carResponseObserver);
      }
 
     // Add a new discovered device to the list
@@ -100,7 +108,7 @@ public class BluetoothSearchHelper implements ConnectionManager.ConnectionManage
     }
     // Call this method once this helper class goes out of scope to prevent memory leaks!
     public void destroyClass() {
-        connectionManager.removeObserver(this);
+        carResp.removeObserver(carResponseObserver);
         BluetoothConnection.discoveredDevices.removeObserver(btDiscoveredObserver);
         BluetoothConnection.BTConnectedToPeripheral.removeObserver(btConnectedObserver);
     }
@@ -110,8 +118,8 @@ public class BluetoothSearchHelper implements ConnectionManager.ConnectionManage
         }
     }
 
-    @Override
-    public void receivedFromCar(JSONObject state) {
+
+    private void receivedFromCar(JSONObject state) {
         // Run only if confirming the selected device
         if (isConfirmingVIN) {
             // check if the VIN is set in the JSON object.
