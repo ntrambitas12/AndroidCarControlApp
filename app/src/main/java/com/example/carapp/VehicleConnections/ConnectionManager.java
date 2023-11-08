@@ -73,8 +73,6 @@ public class ConnectionManager extends AndroidViewModel {
         BluetoothLink.startScan(pairingMode);
     }
 
-
-
     private void registerCallbacks() {
         // Register the appropriate observers
         BluetoothConnection.BTPowerState.observeForever( new Observer<Boolean>() {
@@ -94,15 +92,9 @@ public class ConnectionManager extends AndroidViewModel {
     }
 
     public void endConnection() {
-        if (BluetoothLink != null) {
-            BluetoothLink.endConnection();
-        }
-        if (WebLink != null) {
-            WebLink.endConnection();
-        }
-            BluetoothLink = null;
-            WebLink = null;
-        }
+        BluetoothLink.endConnection();
+        WebLink.endConnection();
+    }
 
 
     public void sendToCar(Command Payload) {

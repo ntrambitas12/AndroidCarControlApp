@@ -62,7 +62,7 @@ public class WebConnection implements IConnection{
     }
 
     public LiveData<JSONObject> receiveFromCar() {
-
+    if (VIN != null) {
         // Create GET request
         Request request = new Request.Builder()
                 .url(this.URL)
@@ -92,6 +92,7 @@ public class WebConnection implements IConnection{
                 }
             }
         });
+    }
         return carResp;
     }
 

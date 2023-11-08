@@ -42,8 +42,6 @@ public class BluetoothSearchHelper{
      public BluetoothSearchHelper(ConnectionManager connectionManager) {
          this.connectionManager = connectionManager;
 
-
-
          // Create Observers
           btConnectedObserver = connected -> {
               if (!connected) {
