@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@drawable/dashboard_background">
+
+    <!-- Top Half (ConstraintLayout) -->
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="55">
+
+
+        <TextView
+            android:id="@+id/nickNameDashboard"
+            android:layout_width="253dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:fontFamily="@font/inter_semibold"
+            android:text="Cadillac ELR"
+            android:textAlignment="center"
+            android:textColor="#1d1e20"
+            android:textSize="30dp"
+            android:textStyle="bold"
+            android:typeface="normal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/viewPager2"
+            android:layout_width="380dp"
+            android:layout_height="229dp"
+            android:layout_marginBottom="28dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.483"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/evRange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="14dp"
+            android:layout_marginEnd="120dp"
+            android:fontFamily="@font/inter_semibold"
+            android:text="171mi"
+            android:textColor="#1d1e20"
+            android:textSize="28sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nickNameDashboard" />
+
+        <TextView
+            android:id="@+id/totalRange"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="105dp"
+            android:layout_marginBottom="8dp"
+            android:fontFamily="@font/inter_semibold"
+            android:text="425mi total"
+            android:textColor="#7A7D81"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toTopOf="@+id/viewPager2"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/batteryImageView"
+            app:layout_constraintVertical_bias="0" />
+
+        <TextView
+            android:id="@+id/carStatus"
+            android:layout_width="88dp"
+            android:layout_height="22dp"
+            android:layout_marginTop="14dp"
+            android:text="Parked"
+            android:textAlignment="center"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0"
+            app:layout_constraintStart_toEndOf="@+id/totalRange"
+            app:layout_constraintTop_toBottomOf="@+id/evRange" />
+
+        <ImageView
+            android:id="@+id/batteryImageView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:scaleType="center"
+            android:src="@drawable/battery"
+            app:layout_constraintEnd_toStartOf="@+id/evRange"
+            app:layout_constraintHorizontal_bias="0.907"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/nickNameDashboard" />
+
+        <ProgressBar
+            android:id="@+id/batteryCharge"
+            style="?android:attr/progressBarStyleHorizontal"
+            android:layout_width="49dp"
+            android:layout_height="29.5dp"
+            android:layout_marginTop="17dp"
+            android:layout_marginEnd="11dp"
+            android:max="100"
+            android:progress="10"
+            android:progressDrawable="@drawable/battery_shape"
+            app:layout_constraintEnd_toEndOf="@+id/batteryImageView"
+            app:layout_constraintTop_toTopOf="@+id/batteryImageView" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!-- Bottom Half (FrameLayout with Shape Drawable and RecyclerView) -->
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="38"
+        android:background="@drawable/recyclerview_card"
+        >
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerViewSublinks"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+           />
+
+    </FrameLayout>
+
+</LinearLayout>

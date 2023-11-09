@@ -3,26 +3,25 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/dashboard_navigation_graph"
-    app:startDestination="@id/noCarDashboard">
+    app:startDestination="@id/DashboardModern">
 
     <fragment
-        android:id="@+id/dashboardFragment2"
-        android:name="com.example.carapp.Fragments.ParentDashboardFragment"
-        android:label="DashboardFragment">
+        android:id="@+id/DashboardModern"
+        android:name="com.example.carapp.Fragments.DashboardModern"
+        android:label="DashboardModern">
         <action
             android:id="@+id/action_dashboardFragment2_to_carSearch2"
-            app:destination="@id/carSearch2" />
-        <action
-            android:id="@+id/action_dashboardFragment2_to_noCarDashboard"
-            app:destination="@id/noCarDashboard" />
+            app:destination="@id/carSearch2"
+            app:popUpTo="@id/DashboardModern"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_dashboardFragment2_to_carInfoFragment"
             app:destination="@id/carInfoFragment">
             <argument
                 android:name="carVIN"
+                android:defaultValue="@null"
                 app:argType="string"
-                app:nullable="true"
-                android:defaultValue="@null" />
+                app:nullable="true" />
         </action>
 
     </fragment>
@@ -34,12 +33,6 @@
         <action
             android:id="@+id/action_carSearch_to_confirmCarSelection"
             app:destination="@id/confirmCarSelection2" />
-        <action
-            android:id="@+id/action_carSearch2_to_noCarDashboard"
-            app:destination="@id/noCarDashboard" />
-        <action
-            android:id="@+id/action_carSearch2_to_dashboardFragment2"
-            app:destination="@id/dashboardFragment2" />
     </fragment>
     <fragment
         android:id="@+id/confirmCarSelection2"
@@ -48,21 +41,13 @@
         tools:layout="@layout/bluetooth_confirm_car_selection" >
         <action
             android:id="@+id/action_confirmCarSelection_to_dashboardFragment"
-            app:destination="@id/dashboardFragment2" />
+            app:destination="@id/DashboardModern"
+            app:popUpTo="@id/dashboard_navigation_graph"
+            app:popUpToInclusive="true"/>
         <action
             android:id="@+id/action_confirmCarSelection_to_carSearch"
-            app:destination="@id/carSearch2" />
-    </fragment>
-    <fragment
-        android:id="@+id/noCarDashboard"
-        android:name="com.example.carapp.Fragments.NoCarDashboard"
-        android:label="NoCarDashboard" >
-        <action
-            android:id="@+id/action_noCarDashboard_to_carSearch2"
-            app:destination="@id/carSearch2" />
-        <action
-            android:id="@+id/action_noCarDashboard_to_dashboardFragment2"
-            app:destination="@id/dashboardFragment2" />
+            app:destination="@id/carSearch2"
+            app:popUpTo="@id/dashboard_navigation_graph" />
     </fragment>
     <fragment
         android:id="@+id/carInfoFragment"
@@ -70,7 +55,7 @@
         android:label="CarInfoFragment" >
         <action
             android:id="@+id/action_carInfoFragment_to_dashboardFragment2"
-            app:destination="@id/dashboardFragment2" />
+            app:destination="@id/DashboardModern" />
         <argument
             android:name="carVIN"
             app:argType="string"

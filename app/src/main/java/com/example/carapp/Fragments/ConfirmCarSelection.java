@@ -17,7 +17,7 @@ import android.widget.ViewFlipper;
 
 import com.example.carapp.R;
 import com.example.carapp.VehicleConnections.ConnectionManager;
-import com.example.carapp.ViewModels.BluetoothSearchViewModel;
+import com.example.carapp.VehicleConnections.BluetoothSearchHelper;
 import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -25,7 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class ConfirmCarSelection extends Fragment {
 
 private ViewFlipper viewFlipper;
-private BluetoothSearchViewModel viewModel;
+private BluetoothSearchHelper bluetoothSearchHelper;
 private FirebaseManager firebaseManager;
 private TextView VINDisplay;
 private ConnectionManager connectionManager;
@@ -37,8 +37,8 @@ private ConnectionManager connectionManager;
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        viewModel = new ViewModelProvider(requireActivity()).get(BluetoothSearchViewModel.class);
         connectionManager = new ViewModelProvider(requireActivity()).get(ConnectionManager.class);
+        bluetoothSearchHelper = new BluetoothSearchHelper(connectionManager);
         firebaseManager = new ViewModelProvider(requireActivity()).get(FirebaseManager.class);
 
     }
@@ -58,9 +58,9 @@ private ConnectionManager connectionManager;
         // Setup Observers
         setupObservers();
         //Ensure the right view is displayed on load
-        String VIN = viewModel.VINLiveData.getValue();
+        String VIN = bluetoothSearchHelper.VINLiveData.getValue();
         if (VIN.length() == 0) {
-            viewModel.startVINSearch();
+            bluetoothSearchHelper.startVINSearch();
         } else if (VIN == "ERROR") {
             viewFlipper.setDisplayedChild(2); // Set the unable to connect screen
         } else {
@@ -70,13 +70,19 @@ private ConnectionManager connectionManager;
         return rootView;
     }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        connectionManager.endConnection();
+    }
+
     private void setScreenButtons(View rootView) {
         // Set up button click for Unable to connect page
         Button tryAgain = rootView.findViewById(R.id.bt_unable_retry);
         tryAgain.setOnClickListener(click -> {
 
             NavDirections actionSearchBTDevices = ConfirmCarSelectionDirections.actionConfirmCarSelectionToCarSearch();
-            declinedDevice();
+            connectionManager.endConnection();
             Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionSearchBTDevices);
         });
 
@@ -86,17 +92,21 @@ private ConnectionManager connectionManager;
             FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
 
             if (user != null ) {
-                String VIN = viewModel.VINLiveData.getValue();
+                String VIN = bluetoothSearchHelper.VINLiveData.getValue();
                 String uid = user.getUid();
                 String BTMacAddr = connectionManager.getBluetoothLink().getConnectedDeviceUUID();
                 //TODO: Add flow to get nickname and color
                 String nickname = "TEST";
                 String color = "#1234abc";
                 firebaseManager.addNewCar(uid,BTMacAddr, nickname,VIN,color);
+                // Exit pairing mode as we've paired
+                connectionManager.getBluetoothLink().exitPairingMode();
+                // Officially Connect to the car by also passing in its VIN
+                connectionManager.endConnection(); // Need to end connection first otherwise notification to bond won't appear
+                connectionManager.ConnectToCar(BTMacAddr, VIN);
                 NavDirections actionDeviceConfirmed = ConfirmCarSelectionDirections.actionConfirmCarSelectionToDashboardFragment();
-                // Request to bond device once user confirms
-                connectionManager.getBluetoothLink().requestBond();
-                Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionDeviceConfirmed);
+                bluetoothSearchHelper.destroyClass();
+                Navigation.findNavController(getActivity(), R.id.Nav_Dashboard).navigate(actionDeviceConfirmed);
             } else {
                 // Error has occured
                 //TODO: handle this case here
@@ -107,15 +117,12 @@ private ConnectionManager connectionManager;
         Button VINDeclined = rootView.findViewById(R.id.confirm_BT_no);
         VINDeclined.setOnClickListener(click -> {
             NavDirections actionVINDeclined = ConfirmCarSelectionDirections.actionConfirmCarSelectionToCarSearch();
-            declinedDevice();
-            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionVINDeclined);
+            connectionManager.endConnection();
+            Navigation.findNavController(getActivity(), R.id.Nav_Dashboard).navigate(actionVINDeclined);
 
         });
     }
-    private void declinedDevice() {
-        connectionManager.endConnection();
-        viewModel.VINLiveData.setValue("");
-    }
+
     private void setupObservers() {
         final Observer<String> VINFound = VIN -> {
             if (VIN == "ERROR") {
@@ -126,6 +133,6 @@ private ConnectionManager connectionManager;
                 viewFlipper.setDisplayedChild(1); // Set the confirm VIN screen
             }
         };
-        viewModel.VINLiveData.observe(getViewLifecycleOwner(), VINFound);
+        bluetoothSearchHelper.VINLiveData.observe(getViewLifecycleOwner(), VINFound);
     }
 }

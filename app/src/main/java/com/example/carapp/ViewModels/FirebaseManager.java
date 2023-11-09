@@ -1,17 +1,11 @@
 package com.example.carapp.ViewModels;
 
-import android.util.Log;
-
 import androidx.lifecycle.LiveData;
-import androidx.lifecycle.MutableLiveData;
 import androidx.lifecycle.ViewModel;
 
-import com.example.carapp.FirebaseRepository;
-import com.google.firebase.auth.FirebaseUser;
+import com.example.carapp.Model.FirebaseRepository;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 public class FirebaseManager extends ViewModel {
     private FirebaseRepository repository;

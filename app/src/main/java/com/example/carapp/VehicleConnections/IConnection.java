@@ -1,5 +1,7 @@
 package com.example.carapp.VehicleConnections;
 
+import androidx.lifecycle.LiveData;
+
 import org.json.JSONObject;
 
 public interface IConnection {
@@ -19,7 +21,7 @@ public interface IConnection {
      */
     public void sendToCar(Command Payload);
 
-     public void receiveFromCar();
+     public LiveData<JSONObject> receiveFromCar();
 
 
     /* Returns the car's current state as an object

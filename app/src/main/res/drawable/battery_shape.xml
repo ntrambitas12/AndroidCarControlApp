@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@android:id/background">
+        <shape>
+            <corners android:radius="4dp" /> <!-- Adjust the radius for rounded corners -->
+            <solid android:color="#DDDDDD" /> <!-- Background color for unfilled part -->
+        </shape>
+    </item>
+    <item android:id="@android:id/progress">
+        <clip>
+            <shape>
+                <corners android:radius="4dp" />
+                <solid android:color="#019C10" /> <!-- Fill color for the progress -->
+            </shape>
+        </clip>
+    </item>
+</layer-list>
+

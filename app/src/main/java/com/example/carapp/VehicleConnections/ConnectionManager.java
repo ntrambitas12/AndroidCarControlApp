@@ -1,25 +1,47 @@
 package com.example.carapp.VehicleConnections;
 
+import android.app.Application;
+import android.content.Context;
 import android.os.Handler;
 
+import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
+
+import com.example.carapp.Model.Car;
 
 import org.json.JSONObject;
 
-public class ConnectionManager extends ViewModel {
+import java.util.ArrayList;
+import java.util.List;
+
+public class ConnectionManager extends AndroidViewModel {
 
     // Declare class variables here:
     private IBluetooth BluetoothLink;
-    private  IConnection WebLink;
+    private  WebConnection WebLink;
+    private boolean BTConnected;
+    private boolean BTPowerState;
+    private final MutableLiveData<JSONObject> carResponse = new MutableLiveData<>();
+    private final int refreshInterval = 1000; // Adjust this to change refresh interval
+    private LiveData<JSONObject> resp = null;
 
+    public ConnectionManager(Application application) {
+        super(application);
+        // Initialize connections
+        WebLink = new WebConnection(
+                "http://www.google.com"); //TODO: REPLACE WITH ACTUAL API CALL HERE
+        BluetoothLink = new BluetoothConnection(application.getApplicationContext());
+        // Get initial values
+        BTPowerState = BluetoothConnection.BTPowerState.getValue();
+        BTConnected = BluetoothConnection.BTConnectedToPeripheral.getValue();
+        registerCallbacks();
 
-    public void initialize(IBluetooth BluetoothLink, IConnection WebLink, int refreshInterval) {
-        // Set the references to the Bluetooth and Web controllers
-        this.BluetoothLink = BluetoothLink;
-        this.WebLink = WebLink;
+        Handler handler = new Handler();
 
         // Create method to call receiveFromCar automatically based on refreshInterval
-        Handler handler = new Handler();
         Runnable runnable = new Runnable() {
             @Override
             public void run() {
@@ -30,23 +52,64 @@ public class ConnectionManager extends ViewModel {
         handler.postDelayed(runnable, refreshInterval);
     }
 
-    public void endConnection() {
-        if (BluetoothLink != null && WebLink != null) {
-            if (BluetoothLink.isConnected()) {
-                BluetoothLink.endConnection();
-            } else {
-                WebLink.endConnection();
-            }
+    // Method that will establish a connection to a car
+    public void ConnectToCar(String BTMacAddress, String VIN) {
+        // VIN can be optional. If using only BT, pass VIN as null
+        if (VIN != null) {
+            WebLink.setVIN(VIN);
         }
+
+        // Before attempting to connect, I check that the new device I want to connect
+        // to isn't the same device as the currently connected device
+        if (BluetoothLink.getConnectedDeviceUUID() != BTMacAddress) {
+            // If already connected to BT, disconnect first before attempting to connect to another device
+            BluetoothLink.endConnection();
+            BluetoothLink.connectToTargetDevice(BTMacAddress);
+        }
+
+    }
+
+    // Helper method created that accepts a car object
+    // Initiates a connection to specified car (Calls method above)
+    public void ConnectToCar(Car car) {
+        String BTMacAddress = car.getBTMacAddress();
+        String VIN = car.getVIN();
+        this.ConnectToCar(BTMacAddress, VIN);
+    }
+
+    public void startBTScan(boolean pairingMode) {
+        BluetoothLink.startScan(pairingMode);
+    }
+
+    private void registerCallbacks() {
+        // Register the appropriate observers
+        BluetoothConnection.BTPowerState.observeForever( new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean powerState) {
+                BTPowerState = powerState;
+            }
+        });
+
+        BluetoothConnection.BTConnectedToPeripheral.observeForever(new Observer<Boolean>() {
+            @Override
+            public void onChanged(Boolean status) {
+                BTConnected = status;
+            }
+        });
+
+    }
+
+    public void endConnection() {
+        BluetoothLink.endConnection();
+        WebLink.endConnection();
     }
 
 
     public void sendToCar(Command Payload) {
-        if (BluetoothLink != null && WebLink != null)
         // If connected via Bluetooth, send via Bluetooth
-        if (BluetoothLink.isBTEnabled() && BluetoothLink.isConnected()) {
+        if (BluetoothLink != null && BTPowerState && BTConnected) {
             BluetoothLink.sendToCar(Payload);
-        } else {
+        } else if (WebLink != null) {
             WebLink.sendToCar(Payload);
         }
     }
@@ -54,15 +117,28 @@ public class ConnectionManager extends ViewModel {
     public IBluetooth getBluetoothLink() {
         return BluetoothLink;
     }
+    public LiveData<JSONObject> getReceivedFromCarListener() {
+        return carResponse;
+    }
 
     private void receiveFromCar() {
         // If connected via Bluetooth, receive via Bluetooth
-        if (BluetoothLink != null && WebLink != null) {
-            if (BluetoothLink.isBTEnabled() && BluetoothLink.isConnected()) {
-                BluetoothLink.receiveFromCar();
-            } else {
-                WebLink.receiveFromCar();
+            if (BluetoothLink != null && BTPowerState && BTConnected) {
+                resp = BluetoothLink.receiveFromCar();
+            // If not connected to BT, use weblink if available
+            } else if(WebLink != null) {
+                resp = WebLink.receiveFromCar();
             }
-        }
+            if (resp != null) {
+                resp.observeForever(new Observer<JSONObject>() {
+                    @Override
+                    public void onChanged(JSONObject jsonObject) {
+                        // Post the new liveData here
+                        carResponse.setValue(jsonObject);
+                        resp.removeObserver(this); // Prevent memory leaks
+                    }
+
+                });
+            }
     }
 }
