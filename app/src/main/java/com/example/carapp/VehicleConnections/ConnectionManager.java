@@ -125,11 +125,11 @@ public class ConnectionManager extends AndroidViewModel {
         // If connected via Bluetooth, receive via Bluetooth
             if (BluetoothLink != null && BTPowerState && BTConnected) {
                 resp = BluetoothLink.receiveFromCar();
+            // If not connected to BT, use weblink if available
             } else if(WebLink != null) {
                 resp = WebLink.receiveFromCar();
             }
             if (resp != null) {
-                // Observe whenever the car responds back with its status
                 resp.observeForever(new Observer<JSONObject>() {
                     @Override
                     public void onChanged(JSONObject jsonObject) {

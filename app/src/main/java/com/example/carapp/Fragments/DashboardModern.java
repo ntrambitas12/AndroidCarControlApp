@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.ViewFlipper;
 
 import androidx.annotation.NonNull;
@@ -28,6 +30,10 @@ import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -42,9 +48,18 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     private ViewFlipper viewFlipper;
     private LiveData<HashMap<String, Object>> userData;
     private Observer<HashMap<String, Object>> userDataObserver;
+    private LiveData<JSONObject> receivedCarData;
+    private Observer<JSONObject> receivedFromCarObserver;
     private List<Car> usersCars;
     private int selectedCar; // variable that holds which car in the usersCars list is currently selected
     private ConnectionManager connectionManager;
+
+    /* UI Dashboard Elements */
+    private TextView nickNameDisplay;
+    private TextView batteryRangeDisplay;
+    private TextView totalRangeDisplay;
+    private TextView statusDisplay;
+    private ProgressBar batterySOCDisplay;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -60,6 +75,16 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.dashboard_modern, container, false);
+        // Load in user data
+        firebaseManager.loadProfile(user.getUid());
+        userData = firebaseManager.getUserData();
+        userDataObserver = this::checkData;
+        userData.observe(getViewLifecycleOwner(), userDataObserver);
+
+        // Set receivedFromCarObserver callback
+        receivedCarData = connectionManager.getReceivedFromCarListener();
+        receivedFromCarObserver = this::setUIData;
+        receivedCarData.observe(getViewLifecycleOwner(),receivedFromCarObserver);
         return rootView;
     }
 
@@ -84,7 +109,12 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         sublinks.setLayoutManager(new LinearLayoutManager(getContext()));
         sublinks.setAdapter(adapter);
 
-        // TODO: Set the rest of the elements from Dashboard modern here
+        // TODO: Set viewpager
+        nickNameDisplay = view.findViewById(R.id.nickNameDashboard);
+        batteryRangeDisplay = view.findViewById(R.id.evRange);
+        totalRangeDisplay = view.findViewById(R.id.totalRange);
+        statusDisplay = view.findViewById(R.id.carStatus);
+        batterySOCDisplay = view.findViewById(R.id.batteryCharge);
 
         /* Set the elements of the No Car layout here*/
 
@@ -92,11 +122,6 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         addCar.setOnClickListener(clickListener());
 
 
-        // Load in user data
-        firebaseManager.loadProfile(user.getUid());
-        userData = firebaseManager.getUserData();
-        userDataObserver = this::checkData;
-        userData.observe(getViewLifecycleOwner(), userDataObserver);
     }
 
     @Override
@@ -105,6 +130,7 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
 
         // Remove the observer when no longer needed
         userData.removeObserver(userDataObserver);
+        receivedCarData.removeObserver(receivedFromCarObserver);
     }
 
     private void populateSublinks(List<DashboardLinkModel> dashboardLinks) {
@@ -115,6 +141,24 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, R.id.carInfoFragment));
     }
 
+    // Callback function to set/update UI whenever data is received from car
+    private void setUIData(JSONObject carResp) {
+        try {
+            Car car = usersCars.get(selectedCar);
+            nickNameDisplay.setText(car.getNickName());
+            batterySOCDisplay.setProgress((Integer) carResp.get("batteryChargePercent"));
+            String totalRange = carResp.get("fuelRange") + "mi total";
+            totalRangeDisplay.setText(totalRange);
+            String status = ((Integer) carResp.get("chargingVoltage") > 30) ? "Charging " + carResp.get("chargingVoltage") + "V, " + carResp.get("chargingCurrent") + "A" : (String) carResp.get("transmissionRange");
+            statusDisplay.setText(status);
+            //TODO : Add EV range in paramters returned by ESP32
+        }  catch(JSONException e){
+            // Don't update data
+        }
+    }
+
+
+    // Callback function that executes when userData from Firebase changes
     private void checkData(HashMap<String, Object> userData)
     {
         // Check that user has at least one car in their profile
