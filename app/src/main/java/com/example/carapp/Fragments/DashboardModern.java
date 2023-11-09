@@ -20,7 +20,9 @@ import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
+import com.example.carapp.Adapters.CarAdapter;
 import com.example.carapp.Adapters.DashboardRCViewAdapter;
 import com.example.carapp.Model.Car;
 import com.example.carapp.Model.DashboardLinkModel;
@@ -32,7 +34,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,10 +42,7 @@ import java.util.List;
 public class DashboardModern extends Fragment implements DashboardRCViewAdapter.OnItemClickListener {
     private NavController navController;
     private FirebaseManager firebaseManager;
-    private FirebaseAuth mAuth;
     private FirebaseUser user;
-    private RecyclerView sublinks;
-    private Button addCar;
     private ViewFlipper viewFlipper;
     private LiveData<HashMap<String, Object>> userData;
     private Observer<HashMap<String, Object>> userDataObserver;
@@ -60,12 +58,13 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     private TextView totalRangeDisplay;
     private TextView statusDisplay;
     private ProgressBar batterySOCDisplay;
+    private CarAdapter carPagerAdapter;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         firebaseManager = new ViewModelProvider(this).get(FirebaseManager.class);
-        mAuth = FirebaseAuth.getInstance();
+        FirebaseAuth mAuth = FirebaseAuth.getInstance();
         user = mAuth.getCurrentUser();
         usersCars = new ArrayList<>();
         connectionManager = new ViewModelProvider(requireActivity()).get(ConnectionManager.class);
@@ -101,7 +100,7 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         /* Save Dashboard modern elements here*/
 
         // Set the RecyclerView
-        sublinks = view.findViewById(R.id.recyclerViewSublinks);
+        RecyclerView sublinks = view.findViewById(R.id.recyclerViewSublinks);
         List<DashboardLinkModel> dashboardLinks = new ArrayList<>();
         populateSublinks(dashboardLinks);
         DashboardRCViewAdapter adapter = new DashboardRCViewAdapter(getContext(), dashboardLinks);
@@ -109,7 +108,22 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         sublinks.setLayoutManager(new LinearLayoutManager(getContext()));
         sublinks.setAdapter(adapter);
 
-        // TODO: Set viewpager
+        // Set ViewPager
+        carPagerAdapter = new CarAdapter(usersCars);
+        ViewPager2 swipeableCars = view.findViewById(R.id.viewPager2);
+        swipeableCars.setAdapter(carPagerAdapter);
+        swipeableCars.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                selectedCar = position; // Switch the position of the selected car
+                Car newCard = usersCars.get(selectedCar); // Get the new selected car
+                nickNameDisplay.setText(newCard.getNickName());
+                connectionManager.ConnectToCar(newCard); // Connect to the new car
+             }
+        });
+
+        // Set rest of widgets on dashboard
         nickNameDisplay = view.findViewById(R.id.nickNameDashboard);
         batteryRangeDisplay = view.findViewById(R.id.evRange);
         totalRangeDisplay = view.findViewById(R.id.totalRange);
@@ -117,11 +131,8 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         batterySOCDisplay = view.findViewById(R.id.batteryCharge);
 
         /* Set the elements of the No Car layout here*/
-
-        addCar = view.findViewById(R.id.AddCarNoCar);
+        Button addCar = view.findViewById(R.id.AddCarNoCar);
         addCar.setOnClickListener(clickListener());
-
-
     }
 
     @Override
@@ -144,19 +155,19 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     // Callback function to set/update UI whenever data is received from car
     private void setUIData(JSONObject carResp) {
         try {
-            Car car = usersCars.get(selectedCar);
-            nickNameDisplay.setText(car.getNickName());
+            if (usersCars.size() > 0) {
+                nickNameDisplay.setText(usersCars.get(selectedCar).getNickName()); // Added as a sanity check to make sure that nickName will eventually get set
+            }
             batterySOCDisplay.setProgress((Integer) carResp.get("batteryChargePercent"));
             String totalRange = carResp.get("fuelRange") + "mi total";
             totalRangeDisplay.setText(totalRange);
             String status = ((Integer) carResp.get("chargingVoltage") > 30) ? "Charging " + carResp.get("chargingVoltage") + "V, " + carResp.get("chargingCurrent") + "A" : (String) carResp.get("transmissionRange");
             statusDisplay.setText(status);
-            //TODO : Add EV range in paramters returned by ESP32
+            //TODO : Add EV range in parameters returned by ESP32
         }  catch(JSONException e){
             // Don't update data
         }
     }
-
 
     // Callback function that executes when userData from Firebase changes
     private void checkData(HashMap<String, Object> userData)
@@ -171,6 +182,7 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
             List<HashMap<String, Object>> retrievedCars = (List<HashMap<String, Object>>) userData.get("cars");
 
             //Iterate through all the cars retrieved
+            assert retrievedCars != null;
             for (HashMap<String, Object> car: retrievedCars) {
                 // Create a new car object that holds all the values contained within the hashmap
                 String VIN = (String) car.get("VIN");
@@ -187,8 +199,15 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
                 // Write the created carObject to the list
                 usersCars.add(newCar);
             }
+
+            // Set the text for nickName based from Firebase data
+            if (nickNameDisplay != null) {
+                nickNameDisplay.setText(usersCars.get(selectedCar).getNickName());
+            }
             // Connect to the loaded in car using connectionManager
             connectionManager.ConnectToCar(usersCars.get(selectedCar));
+            // Notify the viewPager that the data changed
+            carPagerAdapter.notifyDataSetChanged();
             // Show the dashboard normally
             viewFlipper.setDisplayedChild(0);
         }
@@ -205,13 +224,9 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
                 NavDirections actionGoToCarSearch = DashboardModernDirections.actionDashboardFragment2ToCarSearch2();
                 navController.navigate(actionGoToCarSearch);
 
-                //for now, to debug, add a fake car
-                //FirebaseManager firebaseManager = new ViewModelProvider(getActivity()).get(FirebaseManager.class);
-
             }
         };
     }
-
 
     @Override
     public void onItemClick(int itemId) {
