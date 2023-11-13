@@ -17,7 +17,7 @@
 
         <TextView
             android:id="@+id/nickNameDashboard"
-            android:layout_width="253dp"
+            android:layout_width="200dp"
             android:layout_height="40dp"
             android:layout_marginTop="20dp"
             android:fontFamily="@font/inter_semibold"
@@ -34,12 +34,14 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/viewPager2"
             android:layout_width="380dp"
-            android:layout_height="229dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="10dp"
             android:layout_marginBottom="28dp"
-            app:layout_constraintBottom_toBottomOf="parent"
+
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.483"
-            app:layout_constraintStart_toStartOf="parent" />
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addCar" />
 
         <TextView
             android:id="@+id/evRange"
@@ -107,6 +109,18 @@
             android:progressDrawable="@drawable/battery_shape"
             app:layout_constraintEnd_toEndOf="@+id/batteryImageView"
             app:layout_constraintTop_toTopOf="@+id/batteryImageView" />
+
+        <Button
+            android:id="@+id/addCar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:text="Add New Car"
+            android:background="@drawable/button_gradient"
+            app:backgroundTint="@null"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/carStatus" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

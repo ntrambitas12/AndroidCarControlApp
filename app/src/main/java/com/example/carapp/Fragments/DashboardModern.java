@@ -137,7 +137,9 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         batterySOCDisplay = view.findViewById(R.id.batteryCharge);
 
         /* Set the elements of the No Car layout here*/
-        Button addCar = view.findViewById(R.id.AddCarNoCar);
+        Button addCarNoCar = view.findViewById(R.id.AddCarNoCar);
+        Button addCar = view.findViewById(R.id.addCar);
+        addCarNoCar.setOnClickListener(clickListener());
         addCar.setOnClickListener(clickListener());
     }
 
@@ -225,7 +227,7 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
 
     private View.OnClickListener clickListener() {
         return view -> {
-            if (view.getId() == R.id.AddCarNoCar) {
+            if (view.getId() == R.id.AddCarNoCar || view.getId() == R.id.addCar) {
                 // go to the pair car screen
                 NavDirections actionGoToCarSearch = DashboardModernDirections.actionDashboardFragment2ToCarSearch2();
                 navController.navigate(actionGoToCarSearch);
