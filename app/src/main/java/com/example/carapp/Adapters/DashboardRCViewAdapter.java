@@ -8,6 +8,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.navigation.NavDirections;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.carapp.Model.DashboardLinkModel;
@@ -18,7 +19,7 @@ import java.util.List;
 
 public class DashboardRCViewAdapter extends RecyclerView.Adapter<DashboardRCViewAdapter.ViewHolder> {
     public interface OnItemClickListener {
-        void onItemClick(int itemId); // Define any parameters you need
+        void onItemClick(NavDirections navAction); // Define any parameters you need
     }
     private OnItemClickListener onItemClickListener;
     public void setOnItemClickListener(OnItemClickListener onItemClickListener) {
@@ -28,6 +29,12 @@ public class DashboardRCViewAdapter extends RecyclerView.Adapter<DashboardRCView
     private Context context;
     public DashboardRCViewAdapter(Context context, List<DashboardLinkModel> items) {
         this.context = context;
+        this.items = items;
+    }
+    public List<DashboardLinkModel> getItems() {
+        return items;
+    }
+    public void setItems(List<DashboardLinkModel> items) {
         this.items = items;
     }
     @NonNull
@@ -45,7 +52,7 @@ public class DashboardRCViewAdapter extends RecyclerView.Adapter<DashboardRCView
         // Set the data in the view
         holder.itemImage.setImageResource(link.getIconRes());
         holder.itemText.setText(link.getLinkText());
-        final int clickedItemNavDest = items.get(position).getNavDirection();
+        final NavDirections clickedItemNavDest = items.get(position).getNavAction();
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {

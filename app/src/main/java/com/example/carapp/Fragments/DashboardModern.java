@@ -40,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DashboardModern extends Fragment implements DashboardRCViewAdapter.OnItemClickListener {
+    final int IndexOfMoreLink = 3;
+
     private NavController navController;
     private FirebaseManager firebaseManager;
     private FirebaseUser user;
@@ -117,9 +119,13 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 selectedCar = position; // Switch the position of the selected car
-                Car newCard = usersCars.get(selectedCar); // Get the new selected car
-                nickNameDisplay.setText(newCard.getNickName());
-                connectionManager.ConnectToCar(newCard); // Connect to the new car
+                Car newCar= usersCars.get(selectedCar); // Get the new selected car
+                nickNameDisplay.setText(newCar.getNickName());
+                connectionManager.ConnectToCar(newCar); // Connect to the new car
+                List<DashboardLinkModel> links = adapter.getItems();
+                links.set(IndexOfMoreLink, new DashboardLinkModel("More", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment().setCar(newCar)));
+                adapter.setItems(links);
+                sublinks.setAdapter(adapter);
              }
         });
 
@@ -146,12 +152,12 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
 
     private void populateSublinks(List<DashboardLinkModel> dashboardLinks) {
         //TODO: refactor to generate based on vehicle type
-        dashboardLinks.add(new DashboardLinkModel("Controls", R.drawable.controls, R.navigation.dashboard_navigation_graph));
+        dashboardLinks.add(new DashboardLinkModel("Controls", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
         // TODO: Likely need to start a new activity here not just navigate to new screen
             // Might make sense to make location own button not in this recycler view
-        dashboardLinks.add(new DashboardLinkModel("Location", R.drawable.controls, R.id.mapsActivity));
-        dashboardLinks.add(new DashboardLinkModel("Charging", R.drawable.controls, R.navigation.dashboard_navigation_graph));
-        dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, R.id.carInfoFragment));
+        dashboardLinks.add(new DashboardLinkModel("Location", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
+        dashboardLinks.add(new DashboardLinkModel("Charging", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
+        dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
     }
 
     // Callback function to set/update UI whenever data is received from car
@@ -225,14 +231,13 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
                 // go to the pair car screen
                 NavDirections actionGoToCarSearch = DashboardModernDirections.actionDashboardFragment2ToCarSearch2();
                 navController.navigate(actionGoToCarSearch);
-
             }
         };
     }
 
     @Override
-    public void onItemClick(int itemId) {
+    public void onItemClick(NavDirections navAction) {
         // Navigate to the correct destination based on link pressed
-        navController.navigate(itemId);
+        navController.navigate(navAction);
     }
 }

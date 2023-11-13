@@ -18,9 +18,9 @@
             android:id="@+id/action_dashboardFragment2_to_carInfoFragment"
             app:destination="@id/carInfoFragment">
             <argument
-                android:name="carVIN"
+                android:name="car"
                 android:defaultValue="@null"
-                app:argType="string"
+                app:argType="com.example.carapp.Model.Car"
                 app:nullable="true" />
         </action>
         <action
@@ -60,8 +60,8 @@
             android:id="@+id/action_carInfoFragment_to_dashboardFragment2"
             app:destination="@id/DashboardModern" />
         <argument
-            android:name="carVIN"
-            app:argType="string"
+            android:name="car"
+            app:argType="com.example.carapp.Model.Car"
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>

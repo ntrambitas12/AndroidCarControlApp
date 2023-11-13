@@ -11,11 +11,13 @@ import android.widget.EditText;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.lifecycle.LiveData;
 import androidx.lifecycle.ViewModelProvider;
 import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import com.example.carapp.Model.Car;
 import com.example.carapp.R;
 import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.firebase.auth.FirebaseAuth;
@@ -32,6 +34,7 @@ public class CarInfoFragment extends Fragment {
     private EditText carVIN;
     private EditText carColor;
     private FirebaseAuth mAuth;
+//    private LiveData<HashMap<String, Object>> userData;
 
 
     @Override
@@ -44,6 +47,8 @@ public class CarInfoFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.view_car_info, container, false);
+//        firebaseManager.loadProfile(mAuth.getUid());
+//        userData = firebaseManager.getUserData();
         return rootView;
     }
 
@@ -59,12 +64,15 @@ public class CarInfoFragment extends Fragment {
         carVIN = view.findViewById(R.id.editCarVIN);
         carColor = view.findViewById(R.id.editCarColor);
 
-        String vin = CarInfoFragmentArgs.fromBundle(getArguments()).getCarVIN();
-//        HashMap<String, Object> car = getSelectedCar(vin);
-//        carNickname.setText(car.get("nickName").toString());
-//        carMacAddress.setText(car.get("BTMacAddress").toString());
-//        carVIN.setText(car.get("VIN").toString());
-//        carColor.setText(car.get("Color").toString());
+        Car selectedCar = CarInfoFragmentArgs.fromBundle(getArguments()).getCar();
+        if (selectedCar != null) {
+//            HashMap<String, Object> car = getSelectedCar(vin);
+            carNickname.setText(selectedCar.getNickName());
+            carMacAddress.setText(selectedCar.getBTMacAddress());
+            carVIN.setText(selectedCar.getVIN());
+            carColor.setText(selectedCar.getColorHEX());
+        }
+
 
         save.setOnClickListener(this.createListener());
         cancel.setOnClickListener(this.createListener());
@@ -86,12 +94,13 @@ public class CarInfoFragment extends Fragment {
         };
     }
 
-    private HashMap<String, Object> getSelectedCar(String carVIN) {
-        for (HashMap<String, Object> car : (List<HashMap<String, Object>>)firebaseManager.getUserData().getValue().get("cars")) {
-            if (carVIN.equals(car.get("VIN").toString())) {
-                return car;
-            }
-        }
-        return null;
-    }
+//    private HashMap<String, Object> getSelectedCar(String carVIN) {
+//        HashMap<String, Object> temp = userData.getValue();
+//        for (HashMap<String, Object> car : (List<HashMap<String, Object>>)firebaseManager.getUserData().getValue().get("cars")) {
+//            if (carVIN.equals(car.get("VIN").toString())) {
+//                return car;
+//            }
+//        }
+//        return null;
+//    }
 }
