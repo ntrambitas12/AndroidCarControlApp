@@ -147,7 +147,9 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     private void populateSublinks(List<DashboardLinkModel> dashboardLinks) {
         //TODO: refactor to generate based on vehicle type
         dashboardLinks.add(new DashboardLinkModel("Controls", R.drawable.controls, R.navigation.dashboard_navigation_graph));
-        dashboardLinks.add(new DashboardLinkModel("Location", R.drawable.controls, R.navigation.dashboard_navigation_graph));
+        // TODO: Likely need to start a new activity here not just navigate to new screen
+            // Might make sense to make location own button not in this recycler view
+        dashboardLinks.add(new DashboardLinkModel("Location", R.drawable.controls, R.id.mapsActivity));
         dashboardLinks.add(new DashboardLinkModel("Charging", R.drawable.controls, R.navigation.dashboard_navigation_graph));
         dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, R.id.carInfoFragment));
     }
@@ -185,8 +187,8 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
             assert retrievedCars != null;
             for (HashMap<String, Object> car: retrievedCars) {
                 // Create a new car object that holds all the values contained within the hashmap
-                String VIN = (String) car.get("VIN");
-                String BTAddress = (String) car.get("BTMacAddress");
+                String VIN = (String) car.get("VIN").toString();
+                String BTAddress = (String) car.get("BTMacAddress").toString();
                 Car newCar = new Car(BTAddress, VIN);
 
                 // Add the optional params to car object
@@ -232,6 +234,5 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     public void onItemClick(int itemId) {
         // Navigate to the correct destination based on link pressed
         navController.navigate(itemId);
-
     }
 }

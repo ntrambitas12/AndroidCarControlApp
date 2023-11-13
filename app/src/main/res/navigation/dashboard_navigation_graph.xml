@@ -23,6 +23,9 @@
                 app:argType="string"
                 app:nullable="true" />
         </action>
+        <action
+            android:id="@+id/action_DashboardModern_to_mapsActivity"
+            app:destination="@id/mapsActivity" />
 
     </fragment>
     <fragment
@@ -62,4 +65,9 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
+    <activity
+        android:id="@+id/mapsActivity"
+        android:name="com.example.carapp.MapsActivity"
+        android:label="activity_maps"
+        tools:layout="@layout/activity_maps" />
 </navigation>
