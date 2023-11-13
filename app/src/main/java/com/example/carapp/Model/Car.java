@@ -2,7 +2,9 @@ package com.example.carapp.Model;
 
 import com.example.carapp.R;
 
-public class Car {
+import java.io.Serializable;
+
+public class Car implements Serializable {
     private String BTMacAddress;
     private String VIN;
     private String ColorHEX;

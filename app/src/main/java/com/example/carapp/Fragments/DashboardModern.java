@@ -40,6 +40,8 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DashboardModern extends Fragment implements DashboardRCViewAdapter.OnItemClickListener {
+    final int IndexOfMoreLink = 3;
+
     private NavController navController;
     private FirebaseManager firebaseManager;
     private FirebaseUser user;
@@ -117,9 +119,13 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
                 selectedCar = position; // Switch the position of the selected car
-                Car newCard = usersCars.get(selectedCar); // Get the new selected car
-                nickNameDisplay.setText(newCard.getNickName());
-                connectionManager.ConnectToCar(newCard); // Connect to the new car
+                Car newCar= usersCars.get(selectedCar); // Get the new selected car
+                nickNameDisplay.setText(newCar.getNickName());
+                connectionManager.ConnectToCar(newCar); // Connect to the new car
+                List<DashboardLinkModel> links = adapter.getItems();
+                links.set(IndexOfMoreLink, new DashboardLinkModel("More", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment().setCar(newCar)));
+                adapter.setItems(links);
+                sublinks.setAdapter(adapter);
              }
         });
 
@@ -131,7 +137,9 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         batterySOCDisplay = view.findViewById(R.id.batteryCharge);
 
         /* Set the elements of the No Car layout here*/
-        Button addCar = view.findViewById(R.id.AddCarNoCar);
+        Button addCarNoCar = view.findViewById(R.id.AddCarNoCar);
+        Button addCar = view.findViewById(R.id.addCar);
+        addCarNoCar.setOnClickListener(clickListener());
         addCar.setOnClickListener(clickListener());
     }
 
@@ -145,11 +153,11 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     }
 
     private void populateSublinks(List<DashboardLinkModel> dashboardLinks) {
-        //TODO: refactor to generate based on vehicle type
-        dashboardLinks.add(new DashboardLinkModel("Controls", R.drawable.controls, R.navigation.dashboard_navigation_graph));
-        dashboardLinks.add(new DashboardLinkModel("Location", R.drawable.controls, R.navigation.dashboard_navigation_graph));
-        dashboardLinks.add(new DashboardLinkModel("Charging", R.drawable.controls, R.navigation.dashboard_navigation_graph));
-        dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, R.id.carInfoFragment));
+        // TODO: refactor to generate based on vehicle type
+        dashboardLinks.add(new DashboardLinkModel("Controls", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
+        dashboardLinks.add(new DashboardLinkModel("Location", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
+        dashboardLinks.add(new DashboardLinkModel("Charging", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
+        dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
     }
 
     // Callback function to set/update UI whenever data is received from car
@@ -185,8 +193,8 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
             assert retrievedCars != null;
             for (HashMap<String, Object> car: retrievedCars) {
                 // Create a new car object that holds all the values contained within the hashmap
-                String VIN = (String) car.get("VIN");
-                String BTAddress = (String) car.get("BTMacAddress");
+                String VIN = (String) car.get("VIN").toString();
+                String BTAddress = (String) car.get("BTMacAddress").toString();
                 Car newCar = new Car(BTAddress, VIN);
 
                 // Add the optional params to car object
@@ -219,19 +227,17 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
 
     private View.OnClickListener clickListener() {
         return view -> {
-            if (view.getId() == R.id.AddCarNoCar) {
+            if (view.getId() == R.id.AddCarNoCar || view.getId() == R.id.addCar) {
                 // go to the pair car screen
                 NavDirections actionGoToCarSearch = DashboardModernDirections.actionDashboardFragment2ToCarSearch2();
                 navController.navigate(actionGoToCarSearch);
-
             }
         };
     }
 
     @Override
-    public void onItemClick(int itemId) {
+    public void onItemClick(NavDirections navAction) {
         // Navigate to the correct destination based on link pressed
-        navController.navigate(itemId);
-
+        navController.navigate(navAction);
     }
 }

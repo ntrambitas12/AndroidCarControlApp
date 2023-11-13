@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    app:backgroundTint="@null">
 
     <TextView
         android:id="@+id/updateCarInfo"
@@ -71,7 +72,10 @@
         android:id="@+id/saveCarInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/button_gradient"
         android:text="Save"
+        app:backgroundTint="@null"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editCarColor" />
 
@@ -79,7 +83,22 @@
         android:id="@+id/cancelCarInfo"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:background="@drawable/button_gradient"
         android:text="Cancel"
+        app:backgroundTint="@null"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editCarColor" />
+
+    <Button
+        android:id="@+id/deleteCar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete Car"
+        android:background="@drawable/delete_button_gradient"
+        app:backgroundTint="@null"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/saveCarInfo" />
 </androidx.constraintlayout.widget.ConstraintLayout>
