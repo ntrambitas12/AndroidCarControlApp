@@ -151,10 +151,8 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     }
 
     private void populateSublinks(List<DashboardLinkModel> dashboardLinks) {
-        //TODO: refactor to generate based on vehicle type
+        // TODO: refactor to generate based on vehicle type
         dashboardLinks.add(new DashboardLinkModel("Controls", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
-        // TODO: Likely need to start a new activity here not just navigate to new screen
-            // Might make sense to make location own button not in this recycler view
         dashboardLinks.add(new DashboardLinkModel("Location", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
         dashboardLinks.add(new DashboardLinkModel("Charging", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
         dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));

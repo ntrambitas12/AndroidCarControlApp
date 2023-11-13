@@ -34,8 +34,7 @@ public class CarInfoFragment extends Fragment {
     private EditText carVIN;
     private EditText carColor;
     private FirebaseAuth mAuth;
-//    private LiveData<HashMap<String, Object>> userData;
-
+    private Car selectedCar;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -47,8 +46,6 @@ public class CarInfoFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View rootView = inflater.inflate(R.layout.view_car_info, container, false);
-//        firebaseManager.loadProfile(mAuth.getUid());
-//        userData = firebaseManager.getUserData();
         return rootView;
     }
 
@@ -59,14 +56,14 @@ public class CarInfoFragment extends Fragment {
 
         Button save = view.findViewById(R.id.saveCarInfo);
         Button cancel = view.findViewById(R.id.cancelCarInfo);
+        Button delete = view.findViewById(R.id.deleteCar);
         carNickname = view.findViewById(R.id.editCarNickname);
         carMacAddress = view.findViewById(R.id.editCarMacAddress);
         carVIN = view.findViewById(R.id.editCarVIN);
         carColor = view.findViewById(R.id.editCarColor);
 
-        Car selectedCar = CarInfoFragmentArgs.fromBundle(getArguments()).getCar();
+        selectedCar = CarInfoFragmentArgs.fromBundle(getArguments()).getCar();
         if (selectedCar != null) {
-//            HashMap<String, Object> car = getSelectedCar(vin);
             carNickname.setText(selectedCar.getNickName());
             carMacAddress.setText(selectedCar.getBTMacAddress());
             carVIN.setText(selectedCar.getVIN());
@@ -76,31 +73,24 @@ public class CarInfoFragment extends Fragment {
 
         save.setOnClickListener(this.createListener());
         cancel.setOnClickListener(this.createListener());
+        delete.setOnClickListener(this.createListener());
     }
 
     private View.OnClickListener createListener() {
         return new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                NavDirections actionGoToDashboard = CarInfoFragmentDirections.actionCarInfoFragmentToDashboardFragment2();
                 if (view.getId() == R.id.saveCarInfo) {
                     firebaseManager.updateCurrentCarData(mAuth.getUid(), carMacAddress.getText().toString(), carNickname.getText().toString(), carVIN.getText().toString(), carColor.getText().toString());
-                    NavDirections actionGoToDashboard = CarInfoFragmentDirections.actionCarInfoFragmentToDashboardFragment2();
                     navController.navigate(actionGoToDashboard);
                 } else if (view.getId() == R.id.cancelCarInfo) {
-                    NavDirections actionGoToDashboard = CarInfoFragmentDirections.actionCarInfoFragmentToDashboardFragment2();
+                    navController.navigate(actionGoToDashboard);
+                } else if (view.getId() == R.id.deleteCar) {
+                    firebaseManager.deleteCar(mAuth.getUid(), selectedCar.getVIN());
                     navController.navigate(actionGoToDashboard);
                 }
             }
         };
     }
-
-//    private HashMap<String, Object> getSelectedCar(String carVIN) {
-//        HashMap<String, Object> temp = userData.getValue();
-//        for (HashMap<String, Object> car : (List<HashMap<String, Object>>)firebaseManager.getUserData().getValue().get("cars")) {
-//            if (carVIN.equals(car.get("VIN").toString())) {
-//                return car;
-//            }
-//        }
-//        return null;
-//    }
 }
