@@ -40,7 +40,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DashboardModern extends Fragment implements DashboardRCViewAdapter.OnItemClickListener {
-    final int IndexOfMoreLink = 3;
+    final int IndexOfMoreLink = 2;
 
     private NavController navController;
     private FirebaseManager firebaseManager;
@@ -114,6 +114,8 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         carPagerAdapter = new CarAdapter(usersCars);
         ViewPager2 swipeableCars = view.findViewById(R.id.viewPager2);
         swipeableCars.setAdapter(carPagerAdapter);
+
+        // Callback for when user changes car
         swipeableCars.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
             @Override
             public void onPageSelected(int position) {
@@ -154,10 +156,11 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
 
     private void populateSublinks(List<DashboardLinkModel> dashboardLinks) {
         // TODO: refactor to generate based on vehicle type
-        dashboardLinks.add(new DashboardLinkModel("Controls", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
-        dashboardLinks.add(new DashboardLinkModel("Location", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
-        dashboardLinks.add(new DashboardLinkModel("Charging", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
+        dashboardLinks.add(new DashboardLinkModel("Controls", R.drawable.controls, DashboardModernDirections.actionDashboardModernToControls()));
+        dashboardLinks.add(new DashboardLinkModel("Location", R.drawable.controls, DashboardModernDirections.actionDashboardModernToMapsFragment()));
+//        dashboardLinks.add(new DashboardLinkModel("Charging", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
         dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
+
     }
 
     // Callback function to set/update UI whenever data is received from car

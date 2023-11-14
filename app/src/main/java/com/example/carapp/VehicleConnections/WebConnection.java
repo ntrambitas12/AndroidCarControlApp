@@ -45,10 +45,9 @@ public class WebConnection implements IConnection{
                 try {
                     // Create the request body
                     RequestBody requestBody = RequestBody.create(String.valueOf(Payload), JSON);
-
                     // Create PUT request
                     Request request = new Request.Builder()
-                            .url(this.URL)
+                            .url(this.URL + "/putCommand")
                             .put(requestBody)
                             .addHeader("set-vin", this.VIN)
                             .build();
@@ -65,7 +64,7 @@ public class WebConnection implements IConnection{
     if (VIN != null) {
         // Create GET request
         Request request = new Request.Builder()
-                .url(this.URL)
+                .url(this.URL + "/getStatus")
                 .addHeader("set-vin", this.VIN)
                 .build();
 

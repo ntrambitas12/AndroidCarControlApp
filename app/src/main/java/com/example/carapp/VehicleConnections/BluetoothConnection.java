@@ -42,8 +42,8 @@ public class BluetoothConnection implements IBluetooth, Serializable {
     private final Handler handler = new Handler();
     private final MutableLiveData<JSONObject> carResp = new MutableLiveData<>();
     private final UUID esp32ServiceUUID = UUID.fromString("91bad492-b950-4226-aa2b-4ede9fa42f59");
-    private final UUID esp32WriteCharacteristicUUID = UUID.fromString("cba1d466-344c-4be3-ab3f-189f80dd7518");
-    private final UUID esp32ReadCharacteristicUUID = UUID.fromString("c8ca6af0-5c97-11ee-9b23-8b8ec8fa712a");
+    private final UUID esp32WriteCharacteristicUUID = UUID.fromString("cba1d466-344c-4be3-ab3f-189f80dd7518"); // Write to car
+    private final UUID esp32ReadCharacteristicUUID = UUID.fromString("c8ca6af0-5c97-11ee-9b23-8b8ec8fa712a"); // ReceiveFromCar
     private Runnable autoConnectRunnable;
 
     private final BluetoothCentralManagerCallback BTCentralManagerCallback = new BluetoothCentralManagerCallback() {
@@ -119,6 +119,12 @@ public class BluetoothConnection implements IBluetooth, Serializable {
             if (!isPairing) {
                 requestBond(); // If not in pairing mode, automatically create a bond
             }
+            peripheral.setNotify(esp32ServiceUUID,esp32ReadCharacteristicUUID, false);
+        }
+
+        @Override
+        public void onNotificationStateUpdate(@NonNull BluetoothPeripheral peripheral, @NonNull BluetoothGattCharacteristic characteristic, @NonNull GattStatus status) {
+            super.onNotificationStateUpdate(peripheral, characteristic, status);
         }
 
         @Override
@@ -142,7 +148,6 @@ public class BluetoothConnection implements IBluetooth, Serializable {
 
             }
         }
-
         @Override
         public void onCharacteristicWrite(@NonNull BluetoothPeripheral peripheral, @NonNull byte[] value, @NonNull BluetoothGattCharacteristic characteristic, @NonNull GattStatus status) {
             super.onCharacteristicWrite(peripheral, value, characteristic, status);
