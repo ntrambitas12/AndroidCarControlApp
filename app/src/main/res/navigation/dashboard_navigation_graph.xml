@@ -24,8 +24,11 @@
                 app:nullable="true" />
         </action>
         <action
-            android:id="@+id/action_DashboardModern_to_mapsActivity"
-            app:destination="@id/mapsActivity" />
+            android:id="@+id/action_DashboardModern_to_controls"
+            app:destination="@id/controls" />
+        <action
+            android:id="@+id/action_DashboardModern_to_mapsFragment"
+            app:destination="@id/mapsFragment" />
 
     </fragment>
     <fragment
@@ -65,9 +68,22 @@
             app:nullable="true"
             android:defaultValue="@null" />
     </fragment>
-    <activity
-        android:id="@+id/mapsActivity"
-        android:name="com.example.carapp.MapsActivity"
-        android:label="activity_maps"
-        tools:layout="@layout/activity_maps" />
+
+    <fragment
+        android:id="@+id/controls"
+        android:name="com.example.carapp.Fragments.Controls"
+        android:label="Controls" >
+        <action
+            android:id="@+id/action_controls_to_DashboardModern"
+            app:destination="@id/DashboardModern" />
+    </fragment>
+    <fragment
+        android:id="@+id/mapsFragment"
+        android:name="com.example.carapp.Fragments.MapsFragment"
+        android:label="fragment_map"
+        tools:layout="@layout/fragment_map" >
+        <action
+            android:id="@+id/action_mapFragment_to_DashboardModern"
+            app:destination="@id/DashboardModern" />
+    </fragment>
 </navigation>

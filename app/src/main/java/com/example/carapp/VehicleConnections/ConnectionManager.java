@@ -25,14 +25,16 @@ public class ConnectionManager extends AndroidViewModel {
     private boolean BTConnected;
     private boolean BTPowerState;
     private final MutableLiveData<JSONObject> carResponse = new MutableLiveData<>();
-    private final int refreshInterval = 1000; // Adjust this to change refresh interval
+    private final int refreshInterval = 900; // Adjust this to change refresh interval
+
+
     private LiveData<JSONObject> resp = null;
 
     public ConnectionManager(Application application) {
         super(application);
         // Initialize connections
         WebLink = new WebConnection(
-                "http://www.google.com"); //TODO: REPLACE WITH ACTUAL API CALL HERE
+                "http://192.168.234.150:3000/api"); //TODO: REPLACE WITH ACTUAL API CALL HERE
         BluetoothLink = new BluetoothConnection(application.getApplicationContext());
         // Get initial values
         BTPowerState = BluetoothConnection.BTPowerState.getValue();
@@ -46,7 +48,7 @@ public class ConnectionManager extends AndroidViewModel {
             @Override
             public void run() {
                 receiveFromCar();
-                handler.postDelayed(this, refreshInterval);
+                handler.postDelayed(this, refreshInterval );
             }
         };
         handler.postDelayed(runnable, refreshInterval);
