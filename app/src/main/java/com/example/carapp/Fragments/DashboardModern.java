@@ -231,6 +231,8 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
     private View.OnClickListener clickListener() {
         return view -> {
             if (view.getId() == R.id.AddCarNoCar || view.getId() == R.id.addCar) {
+                // Disconnect from BT first
+                connectionManager.endConnection();
                 // go to the pair car screen
                 NavDirections actionGoToCarSearch = DashboardModernDirections.actionDashboardFragment2ToCarSearch2();
                 navController.navigate(actionGoToCarSearch);
