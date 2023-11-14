@@ -1,6 +1,7 @@
 package com.example.carapp.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.example.carapp.Adapters.CarAdapter;
 import com.example.carapp.Adapters.DashboardRCViewAdapter;
 import com.example.carapp.Model.Car;
@@ -131,6 +133,8 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
              }
         });
 
+        Log.i("bruh", "ok game");
+
         // Set rest of widgets on dashboard
         nickNameDisplay = view.findViewById(R.id.nickNameDashboard);
         batteryRangeDisplay = view.findViewById(R.id.evRange);
@@ -189,6 +193,7 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
             // get the user's default car
             // (this is the car that will first be selected on load
             selectedCar = Math.toIntExact((Long) userData.get("defaultCar"));
+            Log.i("breh", "in the checkdata");
             // Get all the user's cars
             List<HashMap<String, Object>> retrievedCars = (List<HashMap<String, Object>>) userData.get("cars");
 

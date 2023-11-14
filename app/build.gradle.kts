@@ -75,4 +75,11 @@ dependencies {
 
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
 
+    //Jsoup for web Scraping
+    implementation("org.jsoup:jsoup:1.16.1")
+
+    //Glide
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
+
     }
