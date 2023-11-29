@@ -38,7 +38,6 @@ private ConnectionManager connectionManager;
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         connectionManager = new ViewModelProvider(requireActivity()).get(ConnectionManager.class);
-        bluetoothSearchHelper = new BluetoothSearchHelper(connectionManager);
         firebaseManager = new ViewModelProvider(requireActivity()).get(FirebaseManager.class);
 
     }
@@ -46,6 +45,11 @@ private ConnectionManager connectionManager;
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        if (bluetoothSearchHelper != null) {
+            bluetoothSearchHelper.destroyClass();
+        }
+        bluetoothSearchHelper = new BluetoothSearchHelper(connectionManager);
+
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_confirm_btdevice, container, false);
         viewFlipper = rootView.findViewById(R.id.view_flipper_bt_confirm);
@@ -76,6 +80,12 @@ private ConnectionManager connectionManager;
         connectionManager.endConnection();
     }
 
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        bluetoothSearchHelper.destroyClass();
+    }
+
     private void setScreenButtons(View rootView) {
         // Set up button click for Unable to connect page
         Button tryAgain = rootView.findViewById(R.id.bt_unable_retry);
@@ -83,7 +93,9 @@ private ConnectionManager connectionManager;
 
             NavDirections actionSearchBTDevices = ConfirmCarSelectionDirections.actionConfirmCarSelectionToCarSearch();
             connectionManager.endConnection();
-            Navigation.findNavController(getActivity(), R.id.nav_host_fragment).navigate(actionSearchBTDevices);
+            bluetoothSearchHelper.cancelVINSearchCallback();
+
+            Navigation.findNavController(getActivity(), R.id.Nav_Dashboard).navigate(actionSearchBTDevices);
         });
 
         // Set up yes button to confirm VIN
@@ -118,6 +130,7 @@ private ConnectionManager connectionManager;
         VINDeclined.setOnClickListener(click -> {
             NavDirections actionVINDeclined = ConfirmCarSelectionDirections.actionConfirmCarSelectionToCarSearch();
             connectionManager.endConnection();
+            bluetoothSearchHelper.cancelVINSearchCallback();
             Navigation.findNavController(getActivity(), R.id.Nav_Dashboard).navigate(actionVINDeclined);
 
         });

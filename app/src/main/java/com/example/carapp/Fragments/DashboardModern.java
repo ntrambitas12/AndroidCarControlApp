@@ -150,8 +150,12 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         super.onDestroy();
 
         // Remove the observer when no longer needed
-        userData.removeObserver(userDataObserver);
-        receivedCarData.removeObserver(receivedFromCarObserver);
+        if (userData !=  null && userDataObserver != null) {
+            userData.removeObserver(userDataObserver);
+        }
+        if (receivedCarData != null && receivedFromCarObserver != null) {
+            receivedCarData.removeObserver(receivedFromCarObserver);
+        }
     }
 
     private void populateSublinks(List<DashboardLinkModel> dashboardLinks) {

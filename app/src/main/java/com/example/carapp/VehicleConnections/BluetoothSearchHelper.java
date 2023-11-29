@@ -109,10 +109,12 @@ public class BluetoothSearchHelper{
         carResp.removeObserver(carResponseObserver);
         BluetoothConnection.discoveredDevices.removeObserver(btDiscoveredObserver);
         BluetoothConnection.BTConnectedToPeripheral.removeObserver(btConnectedObserver);
+        VINLiveData.postValue("");
     }
-    private void cancelVINSearchCallback() {
+    public void cancelVINSearchCallback() {
         if (VINSearchCallbackFuture != null && !VINSearchCallbackFuture.isDone()) {
             VINSearchCallbackFuture.cancel(false); // Set to false to allow code inside thread to execute if cancelled
+            VINLiveData.postValue("");
         }
     }
 

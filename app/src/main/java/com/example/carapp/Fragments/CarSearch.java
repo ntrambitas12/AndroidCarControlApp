@@ -71,14 +71,17 @@ public class CarSearch extends Fragment {
         Log.d(TAG, "onCreate executed!");
         // Initialize Bluetooth-related components
         connectionManager = new ViewModelProvider(requireActivity()).get(ConnectionManager.class);
-        BTSearchHelper = new BluetoothSearchHelper(connectionManager);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Log.d(TAG, "onCreateView executed!");
+        if (BTSearchHelper != null) {
+            BTSearchHelper.destroyClass();
+        }
+        connectionManager.endConnection(); // Make sure that we aren't connected to anything as we attempt to pair
+        BTSearchHelper = new BluetoothSearchHelper(connectionManager);
         View rootView = inflater.inflate(R.layout.fragment_carsearch, container, false);
         // Setup the button
         setupRQEnableBTButton(rootView);
@@ -197,6 +200,10 @@ public class CarSearch extends Fragment {
             }
         });
     }
-
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        BTSearchHelper.destroyClass();
+    }
 
 }
