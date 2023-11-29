@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!--
-TODO Change colors of buttons to blue to match rest of app
-TODO Add images to buttons
--->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -19,17 +15,6 @@ TODO Add images to buttons
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent">
 
-        <Button
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentStart="true"
-            android:text="Back"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:background="@drawable/button_gradient"
-            app:backgroundTint="@null" />
-
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -43,7 +28,7 @@ TODO Add images to buttons
         android:id="@+id/LockUnlockLayout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="25dp"
+        android:layout_margin="50dp"
         android:gravity="center"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
@@ -57,6 +42,7 @@ TODO Add images to buttons
             android:layout_marginEnd="10dp"
             android:text="Unlock"
             android:background="@drawable/button_gradient"
+            android:drawableLeft="@drawable/unlock"
             app:backgroundTint="@null" />
 
         <Button
@@ -66,6 +52,7 @@ TODO Add images to buttons
             android:layout_marginStart="10dp"
             android:text="Lock"
             android:background="@drawable/button_gradient"
+            android:drawableLeft="@drawable/lock"
             app:backgroundTint="@null" />
     </LinearLayout>
 
@@ -87,6 +74,7 @@ TODO Add images to buttons
             android:layout_marginEnd="10dp"
             android:text="Remote Start"
             android:background="@drawable/button_gradient"
+            android:drawableLeft="@drawable/car_start"
             app:backgroundTint="@null" />
 
         <Button
@@ -96,6 +84,7 @@ TODO Add images to buttons
             android:layout_marginStart="10dp"
             android:text="Remote Stop"
             android:background="@drawable/button_gradient"
+            android:drawableLeft="@drawable/stop"
             app:backgroundTint="@null" />
     </LinearLayout>
 
@@ -117,6 +106,7 @@ TODO Add images to buttons
             android:layout_marginEnd="10dp"
             android:text="Hazards On"
             android:background="@drawable/button_gradient"
+            android:drawableLeft="@drawable/hazards"
             app:backgroundTint="@null" />
 
         <Button
@@ -126,6 +116,7 @@ TODO Add images to buttons
             android:layout_marginStart="10dp"
             android:text="Hazards Off"
             android:background="@drawable/button_gradient"
+            android:drawableLeft="@drawable/hazards"
             app:backgroundTint="@null" />
     </LinearLayout>
 
@@ -145,8 +136,20 @@ TODO Add images to buttons
             android:layout_height="wrap_content"
             android:text="Open Trunk"
             android:background="@drawable/button_gradient"
+            android:drawableLeft="@drawable/trunk"
             app:backgroundTint="@null" />
     </LinearLayout>
+
+    <Button
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="25dp"
+        android:text="Back"
+        android:background="@drawable/button_gradient"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:backgroundTint="@null" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
