@@ -10,6 +10,9 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.ViewModelProvider;
+import androidx.navigation.NavController;
+import androidx.navigation.NavDirections;
+import androidx.navigation.Navigation;
 
 import com.example.carapp.R;
 import com.example.carapp.VehicleConnections.Command;
@@ -17,6 +20,7 @@ import com.example.carapp.VehicleConnections.ConnectionManager;
 
 public class Controls extends Fragment {
     private ConnectionManager connectionManager;
+    private NavController navController;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -35,6 +39,7 @@ public class Controls extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        navController = Navigation.findNavController(requireActivity(), R.id.Nav_Dashboard);
 
         // Implement button clicks
         Button unlockButton = view.findViewById(R.id.unlock);
@@ -44,6 +49,7 @@ public class Controls extends Fragment {
         Button hazardsOn = view.findViewById(R.id.hazardsOn);
         Button hazardsOff = view.findViewById(R.id.hazardsOff);
         Button openTrunk = view.findViewById(R.id.trunk);
+        Button backButton = view.findViewById(R.id.backButton);
 
         // Set up click listeners for each button
         unlockButton.setOnClickListener(v -> {
@@ -72,6 +78,11 @@ public class Controls extends Fragment {
 
         openTrunk.setOnClickListener(v -> {
             connectionManager.sendToCar(Command.OpenTrunk);
+        });
+
+        backButton.setOnClickListener(v -> {
+            NavDirections actionGoToDashboard = ControlsDirections.actionControlsToDashboardModern();
+            navController.navigate(actionGoToDashboard);
         });
 
     }
