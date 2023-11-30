@@ -1,5 +1,6 @@
 package com.example.carapp.Fragments;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +18,8 @@ import androidx.navigation.NavController;
 import androidx.navigation.NavDirections;
 import androidx.navigation.Navigation;
 
+import com.example.carapp.DashBoardActivity;
+import com.example.carapp.LoginActivity;
 import com.example.carapp.Model.Car;
 import com.example.carapp.R;
 import com.example.carapp.ViewModels.FirebaseManager;
@@ -57,6 +60,8 @@ public class CarInfoFragment extends Fragment {
         Button save = view.findViewById(R.id.saveCarInfo);
         Button cancel = view.findViewById(R.id.cancelCarInfo);
         Button delete = view.findViewById(R.id.deleteCar);
+        Button signOut = view.findViewById(R.id.signOutButton);
+
         carNickname = view.findViewById(R.id.editCarNickname);
         carMacAddress = view.findViewById(R.id.editCarMacAddress);
         carVIN = view.findViewById(R.id.editCarVIN);
@@ -74,6 +79,7 @@ public class CarInfoFragment extends Fragment {
         save.setOnClickListener(this.createListener());
         cancel.setOnClickListener(this.createListener());
         delete.setOnClickListener(this.createListener());
+        signOut.setOnClickListener(this.createListener());
     }
 
     private View.OnClickListener createListener() {
@@ -89,6 +95,10 @@ public class CarInfoFragment extends Fragment {
                 } else if (view.getId() == R.id.deleteCar) {
                     firebaseManager.deleteCar(mAuth.getUid(), selectedCar.getVIN());
                     navController.navigate(actionGoToDashboard);
+                } else if (view.getId() == R.id.signOutButton) {
+                    FirebaseAuth mAuth = FirebaseAuth.getInstance();
+                    mAuth.signOut();
+                    startActivity(new Intent(getActivity(), LoginActivity.class));
                 }
             }
         };

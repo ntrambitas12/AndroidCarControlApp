@@ -77,6 +77,13 @@ dependencies {
 
     annotationProcessor("com.github.bumptech.glide:compiler:4.11.0")
 
+    // Testing
+    androidTestImplementation("androidx.fragment:fragment-testing:1.4.0")
+    androidTestImplementation("androidx.test:runner:1.4.0")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.4.0")
+    androidTestImplementation ("androidx.test:rules:1.4.0")
+    androidTestImplementation ("androidx.test.uiautomator:uiautomator:2.2.0")
+
     //Jsoup for web Scraping
     implementation("org.jsoup:jsoup:1.16.1")
 
@@ -84,4 +91,6 @@ dependencies {
     implementation ("com.github.bumptech.glide:glide:4.12.0")
     annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
-    }
+}
+
+

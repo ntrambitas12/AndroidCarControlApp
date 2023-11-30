@@ -96,25 +96,30 @@ public class SignUpFragment extends Fragment {
     }
 
     private void createAccount(String email, String password, String name) {
-        mAuth.createUserWithEmailAndPassword(email, password)
-                .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "createUserWithEmail:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            firebaseManager.createNewProfile(name, user.getUid());
-                            //NavDirections actionGoToPairing = SignUpFragmentDirections.actionSignUpFragmentToCarSearch();
-                            //navController.navigate(actionGoToPairing);
-                            startActivity(new Intent(getActivity(), DashBoardActivity.class));
-                        } else {
-                            // If create account fails, display a message to the user.
-                            Log.w(TAG, "createUserWithEmail:failure", task.getException());
-                            Toast.makeText(getActivity(), "Account creation failed.",
-                                    Toast.LENGTH_SHORT).show();
+        if (email != null && email.length() > 0 && password != null && password.length() > 0 && name != null && name.length() > 0) {
+            mAuth.createUserWithEmailAndPassword(email, password)
+                    .addOnCompleteListener(getActivity(), new OnCompleteListener<AuthResult>() {
+                        @Override
+                        public void onComplete(@NonNull Task<AuthResult> task) {
+                            if (task.isSuccessful()) {
+                                // Sign in success, update UI with the signed-in user's information
+                                Log.d(TAG, "createUserWithEmail:success");
+                                FirebaseUser user = mAuth.getCurrentUser();
+                                firebaseManager.createNewProfile(name, user.getUid());
+                                //NavDirections actionGoToPairing = SignUpFragmentDirections.actionSignUpFragmentToCarSearch();
+                                //navController.navigate(actionGoToPairing);
+                                startActivity(new Intent(getActivity(), DashBoardActivity.class));
+                            } else {
+                                // If create account fails, display a message to the user.
+                                Log.w(TAG, "createUserWithEmail:failure", task.getException());
+                                Toast.makeText(getActivity(), "Account creation failed.",
+                                        Toast.LENGTH_SHORT).show();
+                            }
                         }
-                    }
-                });
+                    });
+        } else {
+            Toast.makeText(getActivity(), "Email, Password, and Name are required fields!",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 }
