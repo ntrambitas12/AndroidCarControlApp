@@ -1,6 +1,7 @@
 package com.example.carapp.Fragments;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.bumptech.glide.Glide;
 import com.example.carapp.Adapters.CarAdapter;
 import com.example.carapp.Adapters.DashboardRCViewAdapter;
 import com.example.carapp.Model.Car;
@@ -125,11 +127,12 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
                 nickNameDisplay.setText(newCar.getNickName());
                 connectionManager.ConnectToCar(newCar); // Connect to the new car
                 List<DashboardLinkModel> links = adapter.getItems();
-                links.set(IndexOfMoreLink, new DashboardLinkModel("More", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment().setCar(newCar)));
+                links.set(IndexOfMoreLink, new DashboardLinkModel("More", R.drawable.controls, (NavDirections) DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment().setCar(newCar)));
                 adapter.setItems(links);
                 sublinks.setAdapter(adapter);
              }
         });
+
 
         // Set rest of widgets on dashboard
         nickNameDisplay = view.findViewById(R.id.nickNameDashboard);
@@ -163,7 +166,7 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
         dashboardLinks.add(new DashboardLinkModel("Controls", R.drawable.controls, DashboardModernDirections.actionDashboardModernToControls()));
         dashboardLinks.add(new DashboardLinkModel("Location", R.drawable.controls, DashboardModernDirections.actionDashboardModernToMapsFragment()));
 //        dashboardLinks.add(new DashboardLinkModel("Charging", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
-        dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
+        dashboardLinks.add(new DashboardLinkModel("More", R.drawable.controls, (NavDirections) DashboardModernDirections.actionDashboardFragment2ToCarInfoFragment()));
 
     }
 
@@ -193,6 +196,7 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
             // get the user's default car
             // (this is the car that will first be selected on load
             selectedCar = Math.toIntExact((Long) userData.get("defaultCar"));
+            Log.i("breh", "in the checkdata");
             // Get all the user's cars
             List<HashMap<String, Object>> retrievedCars = (List<HashMap<String, Object>>) userData.get("cars");
 
@@ -210,6 +214,10 @@ public class DashboardModern extends Fragment implements DashboardRCViewAdapter.
                 }
                 if (car.containsKey("nickName")) {
                     newCar.setNickName((String) car.get("nickName"));
+                }
+
+                if (car.containsKey("Image")) {
+                    newCar.setImage((String) car.get("Image"));
                 }
                 // Write the created carObject to the list
                 usersCars.add(newCar);

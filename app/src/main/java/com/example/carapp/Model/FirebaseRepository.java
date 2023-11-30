@@ -45,6 +45,7 @@ public class FirebaseRepository {
     public void addNewCar(String uid, String BTMacAddress, String Nickname, String VIN, String Color) {
         // Fetch the user's profile
         LiveData<HashMap<String, Object>> userData = getUserData(uid);
+        FirebaseRepository repo = this;
         userData.observeForever(new Observer<HashMap<String, Object>>() {
             @Override
             public void onChanged(HashMap<String, Object> profile) {
@@ -62,6 +63,11 @@ public class FirebaseRepository {
                     car.put("nickName", Nickname);
                     car.put("VIN", VIN);
                     car.put("Color", Color);
+                    car.put("Image", "");
+
+                    //finds car picture async in the background
+                    CarPicture pic = new CarPicture(repo, uid, VIN);
+                    pic.FindCarPicture();
 
                     // Add the car to the arrayList
                     assert usersCars != null;
@@ -133,6 +139,59 @@ public class FirebaseRepository {
             }
         });
     }
+    // Updates the selected Car's image in the database
+    public void updateCarImage(String uid, String ImageLink, String VIN) {
+        LiveData<HashMap<String, Object>> userData = getUserData(uid);
+        userData.observeForever(new Observer<HashMap<String, Object>>() {
+            @Override
+            public void onChanged(HashMap<String, Object> profile) {
+                if (profile != null) {
+                    ArrayList<HashMap<String, Object>> newCars = new ArrayList<>();
+                    for (HashMap<String, Object> car : (List<HashMap<String, Object>>)profile.get("cars")) {
+                        if (!VIN.equals(car.get("VIN").toString())) {
+                            newCars.add(car);
+                        } else {
+                            HashMap<String, Object> newCar = new HashMap<>();
+                            newCar.put("BTMacAddress", car.get("BTMacAddress"));
+                            newCar.put("Color", car.get("Color"));
+                            newCar.put("VIN", VIN);
+                            newCar.put("nickName", car.get("nickName"));
+                            newCar.put("Image", ImageLink);
+                            newCars.add(newCar);
+                        }
+                    }
+                    profile.replace("cars", newCars);
+                    database.child("users").child(uid).setValue(profile);
+                    userData.removeObserver(this);
+                }
+            }
+        });
+    }
+
+    public void updateCarImageWithoutObserver(String uid, String ImageLink, String VIN) {
+        LiveData<HashMap<String, Object>> userData = getUserData(uid);
+        HashMap<String, Object> profile = userData.getValue();
+        Log.i("FirebaseRepo",profile.toString());
+        if (profile != null) {
+            ArrayList<HashMap<String, Object>> newCars = new ArrayList<>();
+            for (HashMap<String, Object> car : (List<HashMap<String, Object>>)profile.get("cars")) {
+                if (!VIN.equals(car.get("VIN").toString())) {
+                    newCars.add(car);
+                } else {
+                    HashMap<String, Object> newCar = new HashMap<>();
+                    newCar.put("BTMacAddress", car.get("BTMacAddress"));
+                    newCar.put("Color", car.get("Color"));
+                    newCar.put("VIN", VIN);
+                    newCar.put("nickName", car.get("nickName"));
+                    newCar.put("Image", ImageLink);
+                    newCars.add(newCar);
+                }
+            }
+            profile.replace("cars", newCars);
+            database.child("users").child(uid).setValue(profile);
+        }
+    }
+
     // Updates the currently selected car's data in firebase
     public void updateCurrentCarData(String uid, String BTMacAddress, String Nickname, String VIN, String Color) {
         LiveData<HashMap<String, Object>> userData = getUserData(uid);
@@ -150,6 +209,7 @@ public class FirebaseRepository {
                             newCar.put("Color", Color);
                             newCar.put("VIN", VIN);
                             newCar.put("nickName", Nickname);
+                            newCar.put("Image", car.get("Image"));
                             newCars.add(newCar);
                         }
                     }

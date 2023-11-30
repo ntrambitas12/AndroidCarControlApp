@@ -31,7 +31,8 @@ public class RequestPermissions extends Fragment {
             android.Manifest.permission.BLUETOOTH_CONNECT,
             android.Manifest.permission.BLUETOOTH_SCAN,
             android.Manifest.permission.ACCESS_COARSE_LOCATION,
-            android.Manifest.permission.ACCESS_FINE_LOCATION
+            android.Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.INTERNET
     };
     private static final String[] PERMISSIONS_LEGACY= {
             android.Manifest.permission.BLUETOOTH,

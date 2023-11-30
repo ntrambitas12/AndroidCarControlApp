@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
+import com.bumptech.glide.Glide;
 import com.example.carapp.Model.Car;
 import com.example.carapp.R;
 
@@ -50,7 +51,20 @@ public class CarAdapter extends RecyclerView.Adapter<CarAdapter.CarViewHolder> {
         }
 
         public void bind(Car car) {
-            carImageView.setImageResource(car.getImageResource());
+
+            String image = car.getImageResource();
+            //set image for car
+            try
+            {
+                int resource = Integer.parseInt(image);
+                carImageView.setImageResource(resource);
+            }
+            catch (NumberFormatException nfe)
+            {
+                Glide.with(carImageView)
+                        .load(image)
+                        .into(carImageView);
+            }
         }
     }
 }

@@ -46,6 +46,8 @@ dependencies {
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     implementation("com.google.android.gms:play-services-maps:18.1.0")
     implementation("com.google.android.gms:play-services-location:21.0.1")
+//    implementation("androidx.databinding:databinding-runtime:8.1.4")
+//    implementation("androidx.databinding:library:3.2.0-alpha11")
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
@@ -82,7 +84,13 @@ dependencies {
     androidTestImplementation ("androidx.test:rules:1.4.0")
     androidTestImplementation ("androidx.test.uiautomator:uiautomator:2.2.0")
 
+    //Jsoup for web Scraping
+    implementation("org.jsoup:jsoup:1.16.1")
 
-
+    //Glide
+    implementation ("com.github.bumptech.glide:glide:4.12.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.12.0")
 
 }
+
+
