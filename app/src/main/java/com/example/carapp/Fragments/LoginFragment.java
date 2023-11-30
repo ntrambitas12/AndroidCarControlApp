@@ -27,6 +27,7 @@ import com.example.carapp.VehicleConnections.ConnectionManager;
 import com.example.carapp.ViewModels.FirebaseManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.snackbar.Snackbar;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -42,6 +43,7 @@ public class LoginFragment extends Fragment {
     private EditText emailEditText;
     private EditText passwordEditText;
     private FirebaseManager firebaseManager;
+    private View view;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class LoginFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        this.view = view;
 
         // Save the navController
         navController = Navigation.findNavController(requireActivity(), R.id.nav_host_fragment);
@@ -109,12 +112,13 @@ public class LoginFragment extends Fragment {
 
                             } else {
                                 Log.w(TAG, "signInWithEmail:failure", task.getException());
-                                Toast.makeText(getActivity(), "Authentication failed", Toast.LENGTH_SHORT).show();
+                                Snackbar.make(view, R.string.authFailed, Snackbar.LENGTH_SHORT).show();
+
                             }
                         }
                     });
         } else {
-            Toast.makeText(getActivity(), "Email and Password cannot be empty!", Toast.LENGTH_SHORT).show();
+            Snackbar.make(view, R.string.errEmptyEmailPass, Snackbar.LENGTH_SHORT).show();
         }
     }
 }
